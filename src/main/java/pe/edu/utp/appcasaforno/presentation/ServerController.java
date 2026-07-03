@@ -4,6 +4,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import pe.edu.utp.appcasaforno.presentation.servlet.DemoSerlvet;
+import pe.edu.utp.appcasaforno.presentation.servlet.PedidosServlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,9 +44,12 @@ public class ServerController {
         // 3. Crear contexto apuntando al docBase extraído
         Context ctx = tomcat.addWebapp("", docBase.getAbsolutePath());
 
-        // 4. Registrar servlet API: GET /api/skills/tags
+        // 4. Registrar servlets API
         Tomcat.addServlet(ctx, "demoSerlvet", new DemoSerlvet());
         ctx.addServletMappingDecoded("/api/demo", "demoSerlvet");
+
+        Tomcat.addServlet(ctx, "pedidosServlet", new PedidosServlet());
+        ctx.addServletMappingDecoded("/api/pedidos/*", "pedidosServlet");
 
         // 5. Iniciar y bloquear el hilo principal
         tomcat.start();

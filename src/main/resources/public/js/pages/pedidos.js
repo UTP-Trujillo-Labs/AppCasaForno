@@ -1,54 +1,59 @@
 App.registerPage("pedidos", initPedidos);
 
-const CATEGORIAS = [
-  { id: "pizzas", label: "Pizzas" },
-  { id: "alitas", label: "Alitas" },
-  { id: "salchipapas", label: "salchipapas" },
-  { id: "bebidas", label: "Bebidas" },
-  { id: "pastas", label: "Pastas" },
-];
-
-const PRODUCTOS = [
-  { id: "p1", nombre: "Pepperoni y carne", precio: 28.0, categoria: "pizzas", imagen: "/img/catalog/pizza.svg" },
-  { id: "p2", nombre: "vegetariana", precio: 25.0, categoria: "pizzas", imagen: "/img/catalog/pizza.svg" },
-  { id: "p3", nombre: "Americana", precio: 24.0, categoria: "pizzas", imagen: "/img/catalog/pizza.svg" },
-  { id: "p4", nombre: "Margarita", precio: 24.0, categoria: "pizzas", imagen: "/img/catalog/pizza.svg" },
-  { id: "p5", nombre: "Pepperoni", precio: 25.0, categoria: "pizzas", imagen: "/img/catalog/pizza.svg" },
-  { id: "p6", nombre: "hawaina", precio: 28.0, categoria: "pizzas", imagen: "/img/catalog/pizza.svg" },
-  { id: "a1", nombre: "Alitas BBQ ×6", precio: 18.0, categoria: "alitas", imagen: "/img/catalog/pizza.svg" },
-  { id: "a2", nombre: "Alitas picantes ×6", precio: 18.0, categoria: "alitas", imagen: "/img/catalog/pizza.svg" },
-  { id: "s1", nombre: "Salchipapa clásica", precio: 12.0, categoria: "salchipapas", imagen: "/img/catalog/pizza.svg" },
-  { id: "s2", nombre: "Salchipapa especial", precio: 15.0, categoria: "salchipapas", imagen: "/img/catalog/pizza.svg" },
-  { id: "b1", nombre: "Gaseosa 500 ml", precio: 4.0, categoria: "bebidas", imagen: "/img/catalog/pizza.svg" },
-  { id: "b2", nombre: "Jugo natural", precio: 6.0, categoria: "bebidas", imagen: "/img/catalog/pizza.svg" },
-  { id: "pa1", nombre: "Spaghetti bolognesa", precio: 22.0, categoria: "pastas", imagen: "/img/catalog/pizza.svg" },
-  { id: "pa2", nombre: "Lasaña", precio: 26.0, categoria: "pastas", imagen: "/img/catalog/pizza.svg" },
-];
-
 function initPedidos() {
   const state = {
     categoria: "pizzas",
     busqueda: "",
     carrito: [],
+    categorias: [],
+    productos: [],
   };
 
-  renderCategorias(state);
-  renderProductos(state);
-  renderCarrito(state);
   bindPedidosEvents(state);
+  cargarPedidos(state);
+}
+
+async function cargarPedidos(state) {
+  try {
+    await Promise.all([fetchCategorias(state), fetchProductos(state)]);
+    renderCategorias(state);
+    renderProductos(state);
+    renderCarrito(state);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("catalogo-categorias").innerHTML =
+      '<p class="catalogo-vacio">Error al cargar el catálogo.</p>';
+  }
+}
+
+async function fetchCategorias(state) {
+  const response = await fetch("/api/pedidos/categorias");
+  if (!response.ok) throw new Error("Error al obtener categorías");
+  state.categorias = await response.json();
+}
+
+async function fetchProductos(state) {
+  const params = new URLSearchParams({ categoria: state.categoria });
+  if (state.busqueda) params.set("busqueda", state.busqueda);
+
+  const response = await fetch(`/api/pedidos/productos?${params}`);
+  if (!response.ok) throw new Error("Error al obtener productos");
+  state.productos = await response.json();
 }
 
 function bindPedidosEvents(state) {
-  document.getElementById("catalogo-buscar")?.addEventListener("input", (e) => {
+  document.getElementById("catalogo-buscar")?.addEventListener("input", async (e) => {
     state.busqueda = e.target.value.trim().toLowerCase();
+    await fetchProductos(state);
     renderProductos(state);
   });
 
-  document.getElementById("catalogo-categorias")?.addEventListener("click", (e) => {
+  document.getElementById("catalogo-categorias")?.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-categoria]");
     if (!btn) return;
     state.categoria = btn.dataset.categoria;
     renderCategorias(state);
+    await fetchProductos(state);
     renderProductos(state);
   });
 
@@ -66,33 +71,24 @@ function renderCategorias(state) {
   const nav = document.getElementById("catalogo-categorias");
   if (!nav) return;
 
-  nav.innerHTML = CATEGORIAS.map(
-    (cat) =>
-      `<button type="button" class="catalogo-cat${state.categoria === cat.id ? " active" : ""}" data-categoria="${cat.id}">${cat.label}</button>`
-  ).join("");
-}
-
-function getProductosFiltrados(state) {
-  return PRODUCTOS.filter((p) => {
-    const matchCategoria = p.categoria === state.categoria;
-    const matchBusqueda =
-      state.busqueda === "" || p.nombre.toLowerCase().includes(state.busqueda);
-    return matchCategoria && matchBusqueda;
-  });
+  nav.innerHTML = state.categorias
+    .map(
+      (cat) =>
+        `<button type="button" class="catalogo-cat${state.categoria === cat.id ? " active" : ""}" data-categoria="${cat.id}">${cat.label}</button>`
+    )
+    .join("");
 }
 
 function renderProductos(state) {
   const grid = document.getElementById("catalogo-grid");
   if (!grid) return;
 
-  const productos = getProductosFiltrados(state);
-
-  if (productos.length === 0) {
+  if (state.productos.length === 0) {
     grid.innerHTML = '<p class="catalogo-vacio">No se encontraron productos.</p>';
     return;
   }
 
-  grid.innerHTML = productos
+  grid.innerHTML = state.productos
     .map(
       (p) => `
       <article class="producto-card">
@@ -106,7 +102,7 @@ function renderProductos(state) {
 }
 
 function agregarAlCarrito(state, productoId) {
-  const producto = PRODUCTOS.find((p) => p.id === productoId);
+  const producto = state.productos.find((p) => p.id === productoId);
   if (!producto) return;
 
   const item = state.carrito.find((i) => i.id === productoId);
@@ -138,7 +134,7 @@ function renderCarrito(state) {
   totalEl.textContent = `$ ${total.toFixed(2)}`;
 }
 
-function enviarACocina(state) {
+async function enviarACocina(state) {
   if (state.carrito.length === 0) {
     alert("Agrega productos al pedido antes de enviar.");
     return;
@@ -146,10 +142,35 @@ function enviarACocina(state) {
 
   const cliente = document.getElementById("pedido-cliente")?.value.trim() || "—";
   const mesa = document.getElementById("pedido-mesa")?.value.trim() || "—";
-  const items = state.carrito.map((i) => `${i.cantidad}x ${i.nombre}`).join(", ");
 
-  alert(`Pedido enviado a cocina\nCliente: ${cliente}\nMesa: ${mesa}\n${items}`);
-  anularPedido(state);
+  const payload = {
+    cliente,
+    mesa,
+    items: state.carrito.map((item) => ({
+      productoId: item.id,
+      cantidad: item.cantidad,
+    })),
+  };
+
+  try {
+    const response = await fetch("/api/pedidos/cocina", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      alert(result.error || "No se pudo enviar el pedido.");
+      return;
+    }
+
+    alert(`Pedido enviado a cocina\nTicket #${result.ticket}\nCliente: ${result.cliente}\nMesa: ${result.mesa}`);
+    anularPedido(state);
+  } catch (err) {
+    console.error(err);
+    alert("Error al enviar el pedido a cocina.");
+  }
 }
 
 function anularPedido(state) {
