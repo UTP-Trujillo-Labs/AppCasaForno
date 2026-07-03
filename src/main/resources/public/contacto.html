@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World — Java 25 + Tomcat</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="card">
+      <span class="badge">Contacto</span>
+      <h1>¡Hablemos!</h1>
+      <p>Envíanos tus datos y nos pondremos en contacto pronto.</p>
+
+      <form
+        id="contactForm"
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-top: 1.5rem;
+        "
+      >
+        <input type="text" id="nombre" placeholder="Tu Nombre" required />
+        <input type="email" id="correo" placeholder="Tu Correo" required />
+        <textarea
+          id="mensaje"
+          placeholder="Tu Mensaje"
+          rows="4"
+          required
+        ></textarea>
+        <button type="submit">Enviar Mensaje</button>
+      </form>
+      <a href="/" class="sub-link">Volver al inicio</a>
+    </div>
+  </body>
+  <script src="/js/core.js"></script>
+</html>

@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  font-family: "Segoe UI", sans-serif;
+  color: #fff;
+}
+.card {
+  text-align: center;
+  padding: 3rem 4rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+.badge {
+  display: inline-block;
+  background: linear-gradient(90deg, #7928ca, #ff0080);
+  border-radius: 999px;
+  padding: 0.25rem 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.stack {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.tag {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+/* Opción B: Enlace de texto sutil (Para navegación secundaria) */
+.sub-link {
+  display: block;
+  margin-top: 1rem;
+  color: #a78bfa;
+  text-decoration: none;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.sub-link:hover {
+  text-decoration: underline;
+  opacity: 1;
+}
+
+/* Estilos para inputs y textarea */
+input,
+textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #60a5fa;
+}
+
+/* Estilo del botón */
+button {
+  padding: 0.8rem;
+  background: linear-gradient(90deg, #7928ca, #ff0080);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.02);
+}
