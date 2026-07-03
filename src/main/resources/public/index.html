@@ -3,21 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World — Java 25 + Tomcat</title>
+    <title>CASA FORNO — Sistema de gestión</title>
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <div class="card">
-      <div class="badge">Demo Project</div>
-      <h1>Hello, World!</h1>
-      <p>Servidor embebido con Java puro y Tomcat.</p>
-      <p>Sin frameworks. Sin Spring. Solo Java 25.</p>
-      <div class="stack">
-        <!-- Los tags se cargan dinámicamente desde /api/skills/tags -->
-      </div>
+    <div class="app-shell">
+      <div class="app-layout">
+        <main class="content-area" id="content-area">
+          <p class="content-placeholder">Selecciona una opción del menú</p>
+        </main>
 
-      <a href="/contacto.html" class="sub-link">Contacto</a>
+        <aside class="sidebar">
+          <h1 class="logo">CASA FORNO</h1>
+          <nav class="menu" id="main-menu">
+            <a href="#pedidos" class="menu-item active" data-page="pedidos">
+              Toma de pedidos <span class="menu-icon">📋</span>
+            </a>
+            <a href="#cocina" class="menu-item" data-page="cocina">
+              Monitor de cocina <span class="menu-icon">🍳</span>
+            </a>
+            <a href="#mesas" class="menu-item" data-page="mesas">
+              Control de mesas <span class="menu-icon">🪑</span>
+            </a>
+            <a href="#inventario" class="menu-item" data-page="inventario">
+              Inventario y mermas <span class="menu-icon">📦</span>
+            </a>
+            <a href="#delivery" class="menu-item" data-page="delivery">
+              Delivery y despacho <span class="menu-icon">🛵</span>
+            </a>
+          </nav>
+        </aside>
+      </div>
     </div>
+    <script src="/js/core.js"></script>
+    <script src="/js/app.js"></script>
   </body>
-  <script src="/js/core.js"></script>
 </html>

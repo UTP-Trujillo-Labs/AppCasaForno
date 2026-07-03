@@ -1,0 +1,47 @@
+<section class="page">
+  <header class="page-header">
+    <h2>Inventario y mermas</h2>
+    <p>Control de stock y registro de pérdidas.</p>
+  </header>
+
+  <div class="page-grid">
+    <div class="panel">
+      <h3>Stock actual</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+          </tr>
+        </thead>
+        <tbody id="inventario-stock">
+          <tr><td>Harina</td><td>45</td><td>kg</td></tr>
+          <tr><td>Queso mozzarella</td><td>12</td><td>kg</td></tr>
+          <tr><td>Tomate</td><td>8</td><td>kg</td></tr>
+          <tr><td>Aceite de oliva</td><td>6</td><td>L</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>Registrar merma</h3>
+      <form id="form-merma" class="form-inline">
+        <label>
+          Producto
+          <input type="text" id="merma-producto" placeholder="Nombre del producto" required />
+        </label>
+        <label>
+          Cantidad
+          <input type="number" id="merma-cantidad" min="0.1" step="0.1" required />
+        </label>
+        <label>
+          Motivo
+          <input type="text" id="merma-motivo" placeholder="Ej. Vencimiento" required />
+        </label>
+        <button type="submit">Registrar</button>
+      </form>
+      <ul id="lista-mermas" class="data-list mermas-list"></ul>
+    </div>
+  </div>
+</section>

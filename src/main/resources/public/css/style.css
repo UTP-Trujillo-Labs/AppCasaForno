@@ -3,109 +3,572 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   min-height: 100vh;
+  background: #f5f0e8;
+  font-family: Georgia, "Times New Roman", serif;
+  color: #1a1714;
+}
+
+/* ── Shell layout ── */
+.app-shell {
+  min-height: 100vh;
+  padding: 1.25rem;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: row-reverse;
+  min-height: calc(100vh - 2.5rem);
+  border: 2px solid #d4cfc4;
+  background: #fff;
+}
+
+/* ── Sidebar (derecha) ── */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: #1a1714;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.75rem;
+}
+
+.logo {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #e8a020;
+  text-shadow: 0 2px 8px rgba(232, 160, 32, 0.45);
+  margin-bottom: 3rem;
+  line-height: 1.2;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  color: #e8a020;
+}
+
+.menu-item.active {
+  color: #e8a020;
+}
+
+.menu-icon {
+  font-style: normal;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* ── Content area (izquierda) ── */
+.content-area {
+  flex: 1;
+  background: #ffffff;
+  border-right: 1px solid #d4cfc4;
+  padding: 2.5rem 3rem;
+  overflow-y: auto;
+}
+
+.content-placeholder {
+  color: #999;
+  font-style: italic;
+  margin-top: 2rem;
+}
+
+.content-loading {
+  color: #888;
+  font-style: italic;
+}
+
+.content-error {
+  color: #c0392b;
+}
+
+/* ── Page content ── */
+.page-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e8e4dc;
+}
+
+.page-header h2 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1714;
+  margin-bottom: 0.35rem;
+}
+
+.page-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.panel {
+  border: 1px solid #e8e4dc;
+  border-radius: 6px;
+  padding: 1.5rem;
+  background: #faf9f7;
+}
+
+.panel h3 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1714;
+  margin-bottom: 1rem;
+}
+
+/* ── Forms ── */
+.form-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.form-inline label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  background: #fff;
+  border: 1px solid #d4cfc4;
+  border-radius: 4px;
+  color: #1a1714;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #e8a020;
+}
+
+button {
+  padding: 0.65rem 1.25rem;
+  background: #e8a020;
+  border: none;
+  border-radius: 4px;
+  color: #1a1714;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 0.25rem;
+}
+
+button:hover {
+  background: #d49010;
+}
+
+/* ── Data lists ── */
+.data-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.data-list li {
+  padding: 0.65rem 0.85rem;
+  background: #fff;
+  border: 1px solid #e8e4dc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  position: relative;
+}
+
+.btn-action {
+  float: right;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+.btn-action--danger {
+  background: #c0392b;
+  color: #fff;
+}
+
+.btn-action--success {
+  background: #27ae60;
+  color: #fff;
+}
+
+.delivery-direccion {
+  color: #888;
+}
+
+.data-list-empty {
+  color: #999;
+  font-style: italic;
+  background: transparent !important;
+  border: none !important;
+  padding-left: 0 !important;
+}
+
+.mermas-list {
+  margin-top: 1rem;
+}
+
+/* ── Monitor de cocina ── */
+.page-cocina {
+  background: #f0f0f0;
+  margin: -2.5rem -3rem;
+  padding: 2rem 2.5rem;
+  min-height: calc(100% + 5rem);
+}
+
+.cocina-header h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a1714;
+  margin-bottom: 1.75rem;
+}
+
+.cocina-header-icon {
+  font-style: normal;
+}
+
+.ticket-grid {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.ticket {
+  flex: 1;
+  min-width: 220px;
+  max-width: 280px;
+  background: #fdf0bc;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-header h3 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1714;
+  margin-bottom: 0.15rem;
+}
+
+.ticket-mesa {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.ticket-divider {
+  border: none;
+  border-top: 1px solid #c8b88a;
+  margin: 0.85rem 0 1rem;
+}
+
+.ticket-items {
+  list-style: none;
+  flex: 1;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: #1a1714;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.ticket-nota {
+  margin-bottom: 0.75rem;
+}
+
+.ticket-nota-texto {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.85rem;
+  color: #555;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+}
+
+.ticket-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: auto;
+}
+
+.btn-nota {
+  background: #e8e4dc;
+  color: #555;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.55rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.btn-nota:hover {
+  background: #ddd8ce;
+}
+
+.btn-despachar {
+  background: #5cb85c;
+  color: #fff;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(92, 184, 92, 0.4);
+  transition: background 0.2s;
+}
+
+.btn-despachar:hover {
+  background: #4cae4c;
+}
+
+.ticket-grid-empty {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #888;
+  font-style: italic;
+  padding: 2rem 0;
+}
+
+/* ── Mesas grid ── */
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.mesa {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  user-select: none;
+}
+
+.mesa:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.mesa-num {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.mesa-estado {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mesa-libre {
+  background: #e8f5e9;
+  border-color: #66bb6a;
+  color: #2e7d32;
+}
+
+.mesa-ocupada {
+  background: #fce4ec;
+  border-color: #ef5350;
+  color: #c62828;
+}
+
+.mesa-reservada {
+  background: #fff8e1;
+  border-color: #ffa726;
+  color: #e65100;
+}
+
+/* ── Data table ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid #e8e4dc;
+}
+
+.data-table th {
+  background: #f0ede8;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.data-table tbody tr:hover {
+  background: #fff;
+}
+
+/* ── Contacto (página independiente) ── */
+body.contacto-page {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  font-family: "Segoe UI", sans-serif;
-  color: #fff;
 }
-.card {
+
+.contacto-page .card {
   text-align: center;
   padding: 3rem 4rem;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  background: #fff;
+  border: 1px solid #d4cfc4;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  max-width: 480px;
+  width: 100%;
 }
-.badge {
+
+.contacto-page .badge {
   display: inline-block;
-  background: linear-gradient(90deg, #7928ca, #ff0080);
+  background: #e8a020;
   border-radius: 999px;
   padding: 0.25rem 1rem;
+  font-family: "Segoe UI", Arial, sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 1.5rem;
+  color: #1a1714;
 }
-h1 {
-  font-size: 3rem;
+
+.contacto-page h1 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 2rem;
   font-weight: 700;
-  background: linear-gradient(90deg, #a78bfa, #60a5fa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1a1714;
   margin-bottom: 1rem;
 }
-p {
-  color: rgba(255, 255, 255, 0.6);
+
+.contacto-page p {
+  color: #666;
   font-size: 1rem;
   margin-bottom: 0.5rem;
 }
-.stack {
-  margin-top: 2rem;
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.tag {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-}
 
-/* Opción B: Enlace de texto sutil (Para navegación secundaria) */
-.sub-link {
+.contacto-page .sub-link {
   display: block;
   margin-top: 1rem;
-  color: #a78bfa;
+  color: #e8a020;
   text-decoration: none;
   font-size: 0.85rem;
-  opacity: 0.8;
 }
 
-.sub-link:hover {
+.contacto-page .sub-link:hover {
   text-decoration: underline;
-  opacity: 1;
 }
 
-/* Estilos para inputs y textarea */
-input,
-textarea {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  color: white;
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.3s ease;
-}
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column-reverse;
+  }
 
-input:focus,
-textarea:focus {
-  border-color: #60a5fa;
-}
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    padding: 1.5rem;
+  }
 
-/* Estilo del botón */
-button {
-  padding: 0.8rem;
-  background: linear-gradient(90deg, #7928ca, #ff0080);
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
+  .logo {
+    margin-bottom: 1.5rem;
+  }
 
-button:hover {
-  transform: scale(1.02);
+  .menu {
+    gap: 1rem;
+  }
+
+  .content-area {
+    border-right: none;
+    border-bottom: 1px solid #d4cfc4;
+    padding: 1.5rem;
+  }
+
+  .page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-cocina {
+    margin: -1.5rem -1.5rem;
+    padding: 1.25rem;
+  }
+
+  .ticket-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ticket {
+    max-width: 100%;
+    width: 100%;
+  }
 }
