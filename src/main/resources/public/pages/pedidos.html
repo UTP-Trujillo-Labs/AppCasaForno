@@ -1,40 +1,52 @@
-<section class="page">
-  <header class="page-header">
-    <h2>Toma de pedidos</h2>
-    <p>Registra y gestiona los pedidos de los clientes en sala.</p>
-  </header>
+<section class="page page-pedidos">
+  <div class="pedidos-layout">
+    <aside class="catalogo-panel">
+      <header class="catalogo-header">
+        <h2><span class="catalogo-icon">🍕</span> Catálogo</h2>
+      </header>
 
-  <div class="page-grid">
-    <div class="panel">
-      <h3>Nuevo pedido</h3>
-      <form id="form-pedido" class="form-inline">
-        <label>
-          Mesa
-          <select id="pedido-mesa" required>
-            <option value="">Seleccionar</option>
-            <option value="1">Mesa 1</option>
-            <option value="2">Mesa 2</option>
-            <option value="3">Mesa 3</option>
-            <option value="4">Mesa 4</option>
-          </select>
-        </label>
-        <label>
-          Plato
-          <input type="text" id="pedido-plato" placeholder="Ej. Pizza margarita" required />
-        </label>
-        <label>
-          Cantidad
-          <input type="number" id="pedido-cantidad" min="1" value="1" required />
-        </label>
-        <button type="submit">Agregar</button>
-      </form>
-    </div>
+      <input
+        type="search"
+        id="catalogo-buscar"
+        class="catalogo-buscar"
+        placeholder="Buscar:"
+      />
 
-    <div class="panel">
-      <h3>Pedidos activos</h3>
-      <ul id="lista-pedidos" class="data-list">
-        <li class="data-list-empty">No hay pedidos registrados.</li>
-      </ul>
-    </div>
+      <nav class="catalogo-categorias" id="catalogo-categorias"></nav>
+
+      <div class="catalogo-grid-wrap">
+        <div class="catalogo-grid" id="catalogo-grid"></div>
+      </div>
+
+      <footer class="catalogo-total">
+        Total: <span id="catalogo-total">$ 0.00</span>
+      </footer>
+    </aside>
+
+    <aside class="pedido-panel">
+      <div class="pedido-info">
+        <p class="pedido-meta">
+          Cliente:
+          <input type="text" id="pedido-cliente" class="pedido-meta-input" value="Juan" />
+        </p>
+        <p class="pedido-meta">
+          Mesa:
+          <input type="text" id="pedido-mesa" class="pedido-meta-input" value="04" maxlength="2" />
+        </p>
+        <hr class="pedido-divider" />
+        <ul id="pedido-items" class="pedido-items">
+          <li class="pedido-items-empty">Sin productos en el pedido.</li>
+        </ul>
+      </div>
+
+      <footer class="pedido-acciones">
+        <button type="button" id="btn-enviar-cocina" class="btn-enviar-cocina">
+          Enviar a Cocina
+        </button>
+        <button type="button" id="btn-anular-pedido" class="btn-anular-pedido">
+          Anular Pedido
+        </button>
+      </footer>
+    </aside>
   </div>
 </section>

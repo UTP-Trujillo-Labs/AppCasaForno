@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Pizza">
+  <rect width="120" height="120" fill="#f5e6c8"/>
+  <circle cx="60" cy="60" r="48" fill="#f4c542" stroke="#d4a017" stroke-width="2"/>
+  <circle cx="42" cy="48" r="7" fill="#c0392b"/>
+  <circle cx="68" cy="42" r="6" fill="#c0392b"/>
+  <circle cx="55" cy="68" r="7" fill="#c0392b"/>
+  <circle cx="78" cy="62" r="5" fill="#c0392b"/>
+  <circle cx="38" cy="72" r="5" fill="#27ae60"/>
+  <circle cx="72" cy="78" r="4" fill="#27ae60"/>
+  <ellipse cx="60" cy="60" rx="48" ry="48" fill="none" stroke="#e8a020" stroke-width="3" stroke-dasharray="6 8"/>
+</svg>
