@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.utp.appcasaforno.application.PedidosService;
 import pe.edu.utp.appcasaforno.domain.model.EnvioCocinaRequest;
 import pe.edu.utp.appcasaforno.domain.model.EnvioCocinaResponse;
+import pe.edu.utp.appcasaforno.domain.model.EstadoPedido;
 import pe.edu.utp.appcasaforno.infraestructure.util.JsonUtil;
 
 import java.io.IOException;
@@ -23,6 +24,10 @@ public class PedidosServlet extends HttpServlet {
             case "/productos" -> JsonUtil.write(resp, pedidosService.listarProductos(
                     req.getParameter("categoria"),
                     req.getParameter("busqueda")));
+            case "/pendientes" -> JsonUtil.write(resp,
+                    pedidosService.listarPedidosPorEstado(EstadoPedido.PENDIENTE));
+            case "/completados" -> JsonUtil.write(resp,
+                    pedidosService.listarPedidosPorEstado(EstadoPedido.COMPLETADO));
             case "/cocina" -> JsonUtil.write(resp, pedidosService.listarTicketsPendientes());
             default -> JsonUtil.writeError(resp, HttpServletResponse.SC_NOT_FOUND, "Ruta no encontrada.");
         }

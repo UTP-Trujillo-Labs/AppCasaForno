@@ -1,15 +1,14 @@
 package pe.edu.utp.appcasaforno.application;
 
 import pe.edu.utp.appcasaforno.domain.model.*;
+import pe.edu.utp.appcasaforno.infraestructure.persistence.ColaPedidos;
+import pe.edu.utp.appcasaforno.infraestructure.persistence.HistoricoPedidos;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PedidosService {
-
 
     private static final List<Producto> PRODUCTOS = List.of(
             new Producto("p1", "Pepperoni y carne", 28.0, "pizzas", "/img/catalog/pizza.svg"),
@@ -27,9 +26,9 @@ public class PedidosService {
             new Producto("pa1", "Spaghetti bolognesa", 22.0, "pastas", "/img/catalog/pizza.svg"),
             new Producto("pa2", "Lasaña", 26.0, "pastas", "/img/catalog/pizza.svg"));
 
-    private final AtomicInteger ticketCounter = new AtomicInteger(1047);
-    private final List<TicketCocina> ticketsPendientes = new CopyOnWriteArrayList<>();
-
+    private final ColaPedidos colaPedidos = new ColaPedidos();
+    private final HistoricoPedidos historicoPedidos = new HistoricoPedidos();
+    private int ticketCounter = 1047;
 
     public List<Producto> listarProductos(String categoria, String busqueda) {
         String termino = busqueda == null ? "" : busqueda.trim().toLowerCase(Locale.ROOT);
@@ -47,10 +46,6 @@ public class PedidosService {
             }
         }
         return null;
-//        return PRODUCTOS.stream()
-//                .filter(p -> p.id().equals(id))
-//                .findFirst()
-//                .orElse(null);
     }
 
     public TicketCocina enviarACocina(EnvioCocinaRequest request) {
@@ -71,16 +66,23 @@ public class PedidosService {
         }
 
         TicketCocina ticket = new TicketCocina(
-                ticketCounter.getAndIncrement(),
+                ticketCounter++,
                 request.cliente(),
                 request.mesa(),
                 List.copyOf(lineas));
 
-        ticketsPendientes.add(ticket);
+        colaPedidos.encolar(ticket);
         return ticket;
     }
 
     public List<TicketCocina> listarTicketsPendientes() {
-        return List.copyOf(ticketsPendientes);
+        return listarPedidosPorEstado(EstadoPedido.PENDIENTE);
+    }
+
+    public List<TicketCocina> listarPedidosPorEstado(EstadoPedido estado) {
+        return switch (estado) {
+            case PENDIENTE -> colaPedidos.listar();
+            case COMPLETADO -> historicoPedidos.listar();
+        };
     }
 }

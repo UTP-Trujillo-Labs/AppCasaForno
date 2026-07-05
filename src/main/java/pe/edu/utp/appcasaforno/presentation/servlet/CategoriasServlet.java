@@ -26,4 +26,10 @@ public class CategoriasServlet extends HttpServlet {
             default -> JsonUtil.writeError(resp, HttpServletResponse.SC_NOT_FOUND, "Ruta no encontrada.");
         }
     }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        JsonUtil.prepareJsonResponse(resp);
+        resp.setStatus(HttpServletResponse.SC_OK);
+    }
 }
