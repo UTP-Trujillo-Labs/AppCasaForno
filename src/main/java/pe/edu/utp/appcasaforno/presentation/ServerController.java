@@ -4,6 +4,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import pe.edu.utp.appcasaforno.presentation.servlet.CategoriasServlet;
+import pe.edu.utp.appcasaforno.presentation.servlet.MesasServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.PedidosServlet;
 
 import java.io.File;
@@ -50,6 +51,9 @@ public class ServerController {
 
         Tomcat.addServlet(ctx, "categoriaServet", new CategoriasServlet());
         ctx.addServletMappingDecoded("/api/categorias/*", "categoriaServet");
+
+        Tomcat.addServlet(ctx, "mesasServlet", new MesasServlet());
+        ctx.addServletMappingDecoded("/api/mesas/*", "mesasServlet");
 
         // 5. Iniciar y bloquear el hilo principal
         tomcat.start();

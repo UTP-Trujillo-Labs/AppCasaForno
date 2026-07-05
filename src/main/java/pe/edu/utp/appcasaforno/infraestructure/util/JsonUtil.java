@@ -43,7 +43,7 @@ public final class JsonUtil {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }

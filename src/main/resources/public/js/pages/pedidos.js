@@ -7,6 +7,7 @@ function initPedidos() {
     carrito: [],
     categorias: [],
     productos: [],
+    mesasDisponibles: [],
   };
 
   bindPedidosEvents(state);
@@ -15,9 +16,10 @@ function initPedidos() {
 
 async function cargarPedidos(state) {
   try {
-    await Promise.all([fetchCategorias(state), fetchProductos(state)]);
+    await Promise.all([fetchCategorias(state), fetchProductos(state), fetchMesasDisponibles(state)]);
     renderCategorias(state);
     renderProductos(state);
+    renderMesasSelect(state);
     renderCarrito(state);
   } catch (err) {
     console.error(err);
@@ -39,6 +41,32 @@ async function fetchProductos(state) {
   const response = await fetch(`/api/pedidos/productos?${params}`);
   if (!response.ok) throw new Error("Error al obtener productos");
   state.productos = await response.json();
+}
+
+async function fetchMesasDisponibles(state) {
+  const response = await fetch("/api/mesas/");
+  if (!response.ok) throw new Error("Error al obtener mesas");
+
+  const data = await response.json();
+  state.mesasDisponibles = data.mesas.filter((mesa) => mesa.estado === "libre");
+}
+
+function renderMesasSelect(state) {
+  const select = document.getElementById("pedido-mesa");
+  if (!select) return;
+
+  if (state.mesasDisponibles.length === 0) {
+    select.innerHTML = '<option value="">Sin mesas disponibles</option>';
+    return;
+  }
+
+  select.innerHTML = [
+    '<option value="">Selecciona una mesa</option>',
+    ...state.mesasDisponibles.map(
+      (mesa) =>
+        `<option value="${String(mesa.numero).padStart(2, "0")}">Mesa ${mesa.numero}</option>`
+    ),
+  ].join("");
 }
 
 function bindPedidosEvents(state) {
@@ -147,7 +175,12 @@ async function enviarACocina(state) {
   }
 
   const cliente = document.getElementById("pedido-cliente")?.value.trim() || "—";
-  const mesa = document.getElementById("pedido-mesa")?.value.trim() || "—";
+  const mesa = document.getElementById("pedido-mesa")?.value.trim();
+
+  if (!mesa) {
+    alert("Selecciona una mesa disponible.");
+    return;
+  }
 
   const payload = {
     cliente,
