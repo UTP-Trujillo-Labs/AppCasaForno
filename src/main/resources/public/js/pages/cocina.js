@@ -1,6 +1,66 @@
 App.registerPage("cocina", initCocina);
 
-function initCocina() {
+async function initCocina() {
+  await cargarPedidosPendientes();
+}
+
+async function cargarPedidosPendientes() {
+  const grid = document.getElementById("ticket-grid");
+  if (!grid) return;
+
+  try {
+    const response = await fetch("/api/pedidos/pendientes");
+    if (!response.ok) throw new Error("Error al obtener pedidos pendientes");
+
+    const pedidos = await response.json();
+    renderTickets(pedidos);
+  } catch (err) {
+    console.error(err);
+    grid.innerHTML = '<p class="ticket-grid-empty">No se pudieron cargar los pedidos.</p>';
+    updatePendientesCount();
+  }
+}
+
+function renderTickets(pedidos) {
+  const grid = document.getElementById("ticket-grid");
+  if (!grid) return;
+
+  if (!pedidos.length) {
+    grid.innerHTML = '<p class="ticket-grid-empty">No hay pedidos pendientes.</p>';
+    updatePendientesCount();
+    return;
+  }
+
+  grid.innerHTML = pedidos.map(crearTicketHtml).join("");
+  bindTicketEvents();
+  updatePendientesCount();
+}
+
+function crearTicketHtml(pedido) {
+  const items = pedido.items.map((item) => `<li>${item}</li>`).join("");
+
+  return `
+    <article class="ticket" data-ticket="${pedido.ticket}">
+      <header class="ticket-header">
+        <h3>Ticket #${pedido.ticket}</h3>
+        <p class="ticket-mesa">Mesa: ${pedido.mesa}</p>
+      </header>
+      <hr class="ticket-divider" />
+      <ul class="ticket-items">
+        ${items}
+      </ul>
+      <div class="ticket-nota" hidden>
+        <p class="ticket-nota-texto"></p>
+      </div>
+      <footer class="ticket-footer">
+        <button type="button" class="btn-nota">+ Añadir nota para cocina</button>
+        <button type="button" class="btn-despachar">✔ Despachar</button>
+      </footer>
+    </article>
+  `;
+}
+
+function bindTicketEvents() {
   const grid = document.getElementById("ticket-grid");
   if (!grid) return;
 
@@ -8,8 +68,6 @@ function initCocina() {
     ticket.querySelector(".btn-nota")?.addEventListener("click", () => addNota(ticket));
     ticket.querySelector(".btn-despachar")?.addEventListener("click", () => despacharTicket(ticket));
   });
-
-  updatePendientesCount();
 }
 
 function addNota(ticket) {
