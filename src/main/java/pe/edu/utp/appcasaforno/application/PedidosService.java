@@ -1,4 +1,4 @@
-package pe.edu.utp.appcasaforno.application.service;
+package pe.edu.utp.appcasaforno.application;
 
 import pe.edu.utp.appcasaforno.domain.model.*;
 
@@ -10,12 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PedidosService {
 
-    private static final List<Categoria> CATEGORIAS = List.of(
-            new Categoria("pizzas", "Pizzas"),
-            new Categoria("alitas", "Alitas"),
-            new Categoria("salchipapas", "salchipapas"),
-            new Categoria("bebidas", "Bebidas"),
-            new Categoria("pastas", "Pastas"));
 
     private static final List<Producto> PRODUCTOS = List.of(
             new Producto("p1", "Pepperoni y carne", 28.0, "pizzas", "/img/catalog/pizza.svg"),
@@ -36,9 +30,6 @@ public class PedidosService {
     private final AtomicInteger ticketCounter = new AtomicInteger(1047);
     private final List<TicketCocina> ticketsPendientes = new CopyOnWriteArrayList<>();
 
-    public List<Categoria> listarCategorias() {
-        return CATEGORIAS;
-    }
 
     public List<Producto> listarProductos(String categoria, String busqueda) {
         String termino = busqueda == null ? "" : busqueda.trim().toLowerCase(Locale.ROOT);
@@ -50,10 +41,16 @@ public class PedidosService {
     }
 
     public Producto buscarProducto(String id) {
-        return PRODUCTOS.stream()
-                .filter(p -> p.id().equals(id))
-                .findFirst()
-                .orElse(null);
+        for (Producto p : PRODUCTOS) {
+            if (p.id().equals(id)) {
+                return p;
+            }
+        }
+        return null;
+//        return PRODUCTOS.stream()
+//                .filter(p -> p.id().equals(id))
+//                .findFirst()
+//                .orElse(null);
     }
 
     public TicketCocina enviarACocina(EnvioCocinaRequest request) {

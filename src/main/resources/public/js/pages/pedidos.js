@@ -27,7 +27,7 @@ async function cargarPedidos(state) {
 }
 
 async function fetchCategorias(state) {
-  const response = await fetch("/api/pedidos/categorias");
+  const response = await fetch("/api/categorias");
   if (!response.ok) throw new Error("Error al obtener categorías");
   state.categorias = await response.json();
 }
@@ -71,12 +71,18 @@ function renderCategorias(state) {
   const nav = document.getElementById("catalogo-categorias");
   if (!nav) return;
 
-  nav.innerHTML = state.categorias
-    .map(
-      (cat) =>
-        `<button type="button" class="catalogo-cat${state.categoria === cat.id ? " active" : ""}" data-categoria="${cat.id}">${cat.label}</button>`
-    )
-    .join("");
+  // INPORTANTE: Construye el HTML boton por boton
+  for (const cat of state.categorias) {
+    nav.innerHTML += `<button type="button" class="catalogo-cat${state.categoria === cat.id ? " active" : ""}" data-categoria="${cat.id}">${cat.label}</button>`;
+  }
+
+  // IMPORTANTE: Sintaxis actual para construir HTML usando map y join
+  // nav.innerHTML = state.categorias
+  //   .map(
+  //     (cat) =>
+  //       `<button type="button" class="catalogo-cat${state.categoria === cat.id ? " active" : ""}" data-categoria="${cat.id}">${cat.label}</button>`
+  //   )
+  //   .join("");
 }
 
 function renderProductos(state) {
@@ -153,11 +159,17 @@ async function enviarACocina(state) {
   };
 
   try {
+    // Ir al metodo JAVA para enviar el pedido a cocina
     const response = await fetch("/api/pedidos/cocina", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" }, // Indicar el tipo de dato que se envia al JAVA
+      body: JSON.stringify(payload), // Convertir el objeto a JSON
     });
+
+    // EJEMPLO:
+    // let obj = {nombre: "manuel", edad: 31}
+    // JSON.stringify(obj)
+    // RESULTADO: '{"nombre":"manuel","edad":31}'
 
     const result = await response.json();
     if (!response.ok) {

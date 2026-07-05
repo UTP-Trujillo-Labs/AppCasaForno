@@ -3,7 +3,7 @@ package pe.edu.utp.appcasaforno.presentation;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import pe.edu.utp.appcasaforno.presentation.servlet.DemoSerlvet;
+import pe.edu.utp.appcasaforno.presentation.servlet.CategoriasServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.PedidosServlet;
 
 import java.io.File;
@@ -45,11 +45,11 @@ public class ServerController {
         Context ctx = tomcat.addWebapp("", docBase.getAbsolutePath());
 
         // 4. Registrar servlets API
-        Tomcat.addServlet(ctx, "demoSerlvet", new DemoSerlvet());
-        ctx.addServletMappingDecoded("/api/demo", "demoSerlvet");
-
         Tomcat.addServlet(ctx, "pedidosServlet", new PedidosServlet());
         ctx.addServletMappingDecoded("/api/pedidos/*", "pedidosServlet");
+
+        Tomcat.addServlet(ctx, "categoriaServet", new CategoriasServlet());
+        ctx.addServletMappingDecoded("/api/categorias/*", "categoriaServet");
 
         // 5. Iniciar y bloquear el hilo principal
         tomcat.start();

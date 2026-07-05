@@ -29,4 +29,21 @@ public final class JsonUtil {
     public static <T> T read(HttpServletRequest req, Class<T> type) throws IOException {
         return MAPPER.readValue(req.getInputStream(), type);
     }
+
+    public static String normalizePath(String pathInfo) {
+        if (pathInfo == null || pathInfo.isBlank()) {
+            return "/";
+        }
+        return pathInfo.endsWith("/") && pathInfo.length() > 1
+                ? pathInfo.substring(0, pathInfo.length() - 1)
+                : pathInfo;
+    }
+
+    public static void prepareJsonResponse(HttpServletResponse resp) {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    }
 }
