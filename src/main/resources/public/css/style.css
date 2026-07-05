@@ -14,14 +14,14 @@ body {
 /* ── Shell layout ── */
 .app-shell {
   min-height: 100vh;
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
 }
 
 .app-layout {
   display: flex;
-  flex-direction: row-reverse;
+  /* flex-direction: row-reverse; */
   min-height: calc(100vh - 2.5rem);
-  border: 2px solid #d4cfc4;
+  /* border: 2px solid #d4cfc4; */
   background: #fff;
 }
 

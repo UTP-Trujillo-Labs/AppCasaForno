@@ -53,7 +53,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>pe.edu.utp.appcasaforno.HelloWorld</mainClass>
+                            <mainClass>pe.edu.utp.appcasaforno.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
