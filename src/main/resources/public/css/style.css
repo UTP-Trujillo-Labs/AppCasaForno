@@ -584,6 +584,8 @@ button:hover {
   font-weight: 600;
   color: #1a1714;
   margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
 }
 
 .pedido-meta-input {
@@ -593,7 +595,6 @@ button:hover {
   font-size: 1rem;
   font-weight: 600;
   color: #1a1714;
-  width: 60%;
   outline: none;
   border-bottom: 1px dashed transparent;
 }

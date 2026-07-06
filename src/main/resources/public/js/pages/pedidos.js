@@ -98,6 +98,7 @@ function bindPedidosEvents(state) {
 function renderCategorias(state) {
   const nav = document.getElementById("catalogo-categorias");
   if (!nav) return;
+  nav.innerHTML = "";
 
   // INPORTANTE: Construye el HTML boton por boton
   for (const cat of state.categorias) {
