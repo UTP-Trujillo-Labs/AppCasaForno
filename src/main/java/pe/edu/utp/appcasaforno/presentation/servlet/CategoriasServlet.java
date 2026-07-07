@@ -1,35 +1,18 @@
 package pe.edu.utp.appcasaforno.presentation.servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.utp.appcasaforno.application.CategoriaServicio;
-import pe.edu.utp.appcasaforno.infraestructure.util.JsonUtil;
+import pe.edu.utp.appcasaforno.infraestructure.web.ApiHandler;
+import pe.edu.utp.appcasaforno.infraestructure.web.ApiServlet;
+import pe.edu.utp.appcasaforno.presentation.handler.categorias.ListarCategoriasHandler;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CategoriasServlet extends HttpServlet {
-    private final CategoriaServicio categoriaServicio;
+public class CategoriasServlet extends ApiServlet {
 
-    public CategoriasServlet() {
-        this.categoriaServicio = new CategoriaServicio();
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonUtil.prepareJsonResponse(resp);
-
-        String path = JsonUtil.normalizePath(req.getPathInfo());
-        switch (path) {
-            case "/" -> JsonUtil.write(resp, categoriaServicio.listarCategorias());
-            default -> JsonUtil.writeError(resp, HttpServletResponse.SC_NOT_FOUND, "Ruta no encontrada.");
-        }
-    }
-
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonUtil.prepareJsonResponse(resp);
-        resp.setStatus(HttpServletResponse.SC_OK);
+    public CategoriasServlet(CategoriaServicio categoriaServicio) {
+        Map<String, ApiHandler> getHandlers = Map.of("/", new ListarCategoriasHandler(categoriaServicio));
+        Map<String, ApiHandler> postHandlers = new HashMap<>();
+        super(getHandlers, postHandlers);
     }
 }

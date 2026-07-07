@@ -1,62 +1,22 @@
 package pe.edu.utp.appcasaforno.presentation.servlet;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import pe.edu.utp.appcasaforno.application.PedidosService;
-import pe.edu.utp.appcasaforno.domain.model.EnvioCocinaRequest;
-import pe.edu.utp.appcasaforno.domain.model.EnvioCocinaResponse;
-import pe.edu.utp.appcasaforno.domain.model.EstadoPedido;
-import pe.edu.utp.appcasaforno.infraestructure.util.JsonUtil;
+import pe.edu.utp.appcasaforno.infraestructure.web.ApiHandler;
+import pe.edu.utp.appcasaforno.infraestructure.web.ApiServlet;
+import pe.edu.utp.appcasaforno.presentation.handler.pedidos.*;
 
-import java.io.IOException;
+import java.util.Map;
 
-public class PedidosServlet extends HttpServlet {
+public class PedidosServlet extends ApiServlet {
 
-    private final PedidosService pedidosService = new PedidosService();
+    public PedidosServlet(PedidosService pedidosService) {
+        Map<String, ApiHandler> getHandlers = Map.of(
+                "/productos", new ListarProductosHandler(pedidosService),
+                "/pendientes", new ListarPedidosPendientesHandler(pedidosService),
+                "/completados", new ListarPedidosCompletadosHandler(pedidosService),
+                "/cocina", new ListarCocinaHandler(pedidosService));
+        Map<String, ApiHandler> postHandlers = Map.of("/cocina", new EnviarCocinaHandler(pedidosService));
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        JsonUtil.prepareJsonResponse(resp);
-
-        String path = JsonUtil.normalizePath(req.getPathInfo());
-        switch (path) {
-            case "/productos" -> JsonUtil.write(resp, pedidosService.listarProductos(
-                    req.getParameter("categoria"),
-                    req.getParameter("busqueda")));
-            case "/pendientes" -> JsonUtil.write(resp,
-                    pedidosService.listarPedidosPorEstado(EstadoPedido.PENDIENTE));
-            case "/completados" -> JsonUtil.write(resp,
-                    pedidosService.listarPedidosPorEstado(EstadoPedido.COMPLETADO));
-            case "/cocina" -> JsonUtil.write(resp, pedidosService.listarTicketsPendientes());
-            default -> JsonUtil.writeError(resp, HttpServletResponse.SC_NOT_FOUND, "Ruta no encontrada.");
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        JsonUtil.prepareJsonResponse(resp);
-
-        String path = JsonUtil.normalizePath(req.getPathInfo());
-        if (!"/cocina".equals(path)) {
-            JsonUtil.writeError(resp, HttpServletResponse.SC_NOT_FOUND, "Ruta no encontrada.");
-            return;
-        }
-
-        try {
-            EnvioCocinaRequest request = JsonUtil.read(req, EnvioCocinaRequest.class);
-            EnvioCocinaResponse response = EnvioCocinaResponse.from(pedidosService.enviarACocina(request));
-
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            JsonUtil.write(resp, response);
-        } catch (IllegalArgumentException ex) {
-            JsonUtil.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-        }
-    }
-
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) {
-        JsonUtil.prepareJsonResponse(resp);
-        resp.setStatus(HttpServletResponse.SC_OK);
+        super(getHandlers, postHandlers);
     }
 }
