@@ -27,7 +27,12 @@
       <div class="pedido-info">
         <p class="pedido-meta">
           Cliente:
-          <input type="text" id="pedido-cliente" class="pedido-meta-input" value="Juan" />
+          <input
+            type="text"
+            id="pedido-cliente"
+            class="pedido-meta-input"
+            value="Juan"
+          />
         </p>
         <p class="pedido-meta">
           Mesa:
@@ -40,6 +45,16 @@
           <li class="pedido-items-empty">Sin productos en el pedido.</li>
         </ul>
       </div>
+
+      <label class="pedido-nota-label" for="pedido-nota"
+        >Nota para cocina</label
+      >
+      <textarea
+        id="pedido-nota"
+        class="pedido-nota"
+        rows="3"
+        placeholder="Ej. sin cebolla, poco picante, etc."
+      ></textarea>
 
       <footer class="pedido-acciones">
         <button type="button" id="btn-enviar-cocina" class="btn-enviar-cocina">

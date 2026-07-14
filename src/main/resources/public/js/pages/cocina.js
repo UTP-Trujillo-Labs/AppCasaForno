@@ -38,6 +38,10 @@ function renderTickets(pedidos) {
 
 function crearTicketHtml(pedido) {
   const items = pedido.items.map((item) => `<li>${item}</li>`).join("");
+  const nota = (pedido.nota || "").trim();
+  const notaHtml = nota
+    ? `<div class="ticket-nota"><p class="ticket-nota-texto">${nota}</p></div>`
+    : `<div class="ticket-nota" hidden><p class="ticket-nota-texto"></p></div>`;
 
   return `
     <article class="ticket" data-ticket="${pedido.ticket}">
@@ -49,11 +53,8 @@ function crearTicketHtml(pedido) {
       <ul class="ticket-items">
         ${items}
       </ul>
-      <div class="ticket-nota" hidden>
-        <p class="ticket-nota-texto"></p>
-      </div>
+      ${notaHtml}
       <footer class="ticket-footer">
-        <button type="button" class="btn-nota">+ Añadir nota para cocina</button>
         <button type="button" class="btn-despachar">✔ Despachar</button>
       </footer>
     </article>

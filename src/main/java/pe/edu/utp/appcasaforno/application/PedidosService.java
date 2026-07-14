@@ -66,10 +66,13 @@ public class PedidosService {
             lineas.add(item.cantidad() + "x " + producto.nombre());
         }
 
+        String nota = request.nota() == null ? "" : request.nota().trim();
+
         TicketCocina ticket = new TicketCocina(
                 ticketCounter++,
                 request.cliente(),
                 request.mesa(),
+                nota,
                 List.copyOf(lineas));
 
         colaPedidos.encolar(ticket);

@@ -183,6 +183,7 @@ async function enviarACocina(state) {
 
   const cliente = document.getElementById("pedido-cliente")?.value.trim() || "—";
   const mesa = document.getElementById("pedido-mesa")?.value.trim();
+  const nota = document.getElementById("pedido-nota")?.value.trim() || "";
 
   if (!mesa) {
     alert("Selecciona una mesa disponible.");
@@ -192,6 +193,7 @@ async function enviarACocina(state) {
   const payload = {
     cliente,
     mesa,
+    nota,
     items: state.carrito.map((item) => ({
       productoId: item.id,
       cantidad: item.cantidad,
@@ -227,5 +229,7 @@ async function enviarACocina(state) {
 
 function anularPedido(state) {
   state.carrito.length = 0;
+  const notaEl = document.getElementById("pedido-nota");
+  if (notaEl) notaEl.value = "";
   renderCarrito(state);
 }

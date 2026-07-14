@@ -21,6 +21,7 @@ body {
   display: flex;
   /* flex-direction: row-reverse; */
   min-height: calc(100vh - 2.5rem);
+  height: 100vh;
   /* border: 2px solid #d4cfc4; */
   background: #fff;
 }
@@ -85,6 +86,13 @@ body {
   border-right: 1px solid #d4cfc4;
   padding: 2.5rem 3rem;
   overflow-y: auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.content-area:has(.page-pedidos) {
+  padding: 0;
+  overflow: hidden;
 }
 
 .content-placeholder {
@@ -388,16 +396,21 @@ button:hover {
 /* ── Toma de pedidos (catálogo) ── */
 .page-pedidos {
   background: #ececec;
-  margin: -2.5rem -3rem;
   padding: 1.75rem 2rem;
-  min-height: calc(100% + 5rem);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .pedidos-layout {
   display: flex;
   gap: 1.25rem;
   align-items: stretch;
-  min-height: calc(100vh - 8rem);
+  flex: 1;
+  min-height: 0;
+  height: 100%;
 }
 
 .catalogo-panel {
@@ -409,6 +422,8 @@ button:hover {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .pedido-panel {
@@ -421,6 +436,8 @@ button:hover {
   flex-direction: column;
   min-width: 260px;
   max-width: 340px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .catalogo-header h2 {
@@ -429,6 +446,10 @@ button:hover {
   font-weight: 700;
   color: #1a1714;
   margin-bottom: 0.85rem;
+}
+
+.catalogo-header {
+  flex-shrink: 0;
 }
 
 .catalogo-icon {
@@ -445,6 +466,7 @@ button:hover {
   font-size: 0.9rem;
   color: #333;
   margin-bottom: 0.85rem;
+  flex-shrink: 0;
 }
 
 .catalogo-buscar::placeholder {
@@ -456,6 +478,7 @@ button:hover {
   flex-wrap: wrap;
   gap: 0.45rem;
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .catalogo-cat {
@@ -481,36 +504,42 @@ button:hover {
 }
 
 .catalogo-grid-wrap {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   margin-bottom: 0.75rem;
-  padding-right: 0.25rem;
+  padding-right: 0.35rem;
+  overscroll-behavior: contain;
 }
 
 .catalogo-grid-wrap::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+.catalogo-grid-wrap::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
 }
 
 .catalogo-grid-wrap::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 999px;
+}
+
+.catalogo-grid-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .catalogo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.85rem;
-}
-
-.catalogo-vacio {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: #888;
-  font-style: italic;
-  padding: 2rem 0;
+  align-content: start;
 }
 
 .producto-card {
+  min-width: 0;
   background: #fff;
   border-radius: 10px;
   padding: 0.65rem;
@@ -572,10 +601,13 @@ button:hover {
   color: #1a1714;
   padding-top: 0.5rem;
   border-top: 1px solid #e0d4a8;
+  flex-shrink: 0;
 }
 
 .pedido-info {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .pedido-meta {
@@ -620,6 +652,41 @@ button:hover {
 .pedido-items-empty {
   color: #888;
   font-style: italic;
+}
+
+.pedido-nota-label {
+  display: block;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1714;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.pedido-nota {
+  width: 100%;
+  min-height: 4.5rem;
+  resize: vertical;
+  background: #fff8e0;
+  border: 1px solid #c8b88a;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  color: #1a1714;
+  line-height: 1.4;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.pedido-nota::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.pedido-nota:focus {
+  border-color: #e8a020;
 }
 
 .pedido-acciones {
@@ -851,17 +918,33 @@ body.contacto-page {
   }
 
   .page-pedidos {
-    margin: -1.5rem -1.5rem;
     padding: 1rem;
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .content-area:has(.page-pedidos) {
+    overflow-y: auto;
   }
 
   .pedidos-layout {
     flex-direction: column;
-    min-height: auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .catalogo-panel {
+    max-height: 65vh;
+  }
+
+  .catalogo-grid-wrap {
+    max-height: 45vh;
   }
 
   .pedido-panel {
     max-width: 100%;
+    overflow: visible;
   }
 
   .catalogo-grid {
