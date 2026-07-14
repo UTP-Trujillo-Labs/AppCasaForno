@@ -17,6 +17,7 @@ public class PedidosService {
             new Producto("p4", "Margarita", 24.0, "pizzas", "/img/catalog/pizza.svg"),
             new Producto("p5", "Pepperoni", 25.0, "pizzas", "/img/catalog/pizza.svg"),
             new Producto("p6", "hawaina", 28.0, "pizzas", "/img/catalog/pizza.svg"),
+            new Producto("p7", "pizza cuadrada", 28.0, "pizzas", "/img/catalog/pizzac.jpg"),
             new Producto("a1", "Alitas BBQ ×6", 18.0, "alitas", "/img/catalog/pizza.svg"),
             new Producto("a2", "Alitas picantes ×6", 18.0, "alitas", "/img/catalog/pizza.svg"),
             new Producto("s1", "Salchipapa clásica", 12.0, "salchipapas", "/img/catalog/pizza.svg"),
