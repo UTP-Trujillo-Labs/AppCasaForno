@@ -11,7 +11,15 @@ public class CategoriaServicio {
             new Categoria("alitas", "Alitas"),
             new Categoria("salchipapas", "salchipapas"),
             new Categoria("bebidas", "Bebidas"),
-            new Categoria("pastas", "Pastas"));
+            new Categoria("pastas", "Pastas"),
+            new Categoria("bfrias", "Bebidas frías"),
+            new Categoria("cart", "Cervezas Artesanales"),
+            new Categoria("cind", "Cerveza Industriales"),
+            new Categoria("cclas", "Cocteles Clásicos"),
+            new Categoria("caut", "Cocteles de Autor"),
+            new Categoria("mock", "Mocktails"),
+            new Categoria("especial", "Sección Especial")
+        );
 
     public List<Categoria> listarCategorias() {
         return CATEGORIAS;
