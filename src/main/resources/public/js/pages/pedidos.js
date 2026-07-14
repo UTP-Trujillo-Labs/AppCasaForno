@@ -144,6 +144,12 @@ function agregarAlCarrito(state, productoId) {
   if (item) {
     item.cantidad += 1;
   } else {
+    // const nuevoProducto = {
+    //   id: producto.id,
+    //   nombre: producto.nombre,
+    //   precio: producto.precio,
+    //   cantidad: 1,
+    // }
     state.carrito.push({ ...producto, cantidad: 1 });
   }
 
