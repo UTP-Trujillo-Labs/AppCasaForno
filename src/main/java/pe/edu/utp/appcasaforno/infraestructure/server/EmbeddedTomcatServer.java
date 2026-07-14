@@ -11,7 +11,7 @@ import java.io.File;
  */
 public class EmbeddedTomcatServer {
 
-    private static final int PORT = 8080;
+    private static final int PORT = 8081;
 
     private final Tomcat tomcat = new Tomcat();
 
