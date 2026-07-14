@@ -475,10 +475,34 @@ button:hover {
 
 .catalogo-categorias {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.45rem;
   margin-bottom: 1rem;
   flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.35rem;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.catalogo-categorias::-webkit-scrollbar {
+  height: 6px;
+}
+
+.catalogo-categorias::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+}
+
+.catalogo-categorias::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+.catalogo-categorias::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .catalogo-cat {
@@ -492,6 +516,8 @@ button:hover {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .catalogo-cat:hover {
