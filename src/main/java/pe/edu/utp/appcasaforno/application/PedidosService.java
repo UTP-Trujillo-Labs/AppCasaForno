@@ -86,7 +86,12 @@ public class PedidosService {
 
     private final ColaPedidos colaPedidos = new ColaPedidos();
     private final HistoricoPedidos historicoPedidos = new HistoricoPedidos();
+    private final MesasServicio mesasServicio;
     private int ticketCounter = 1047;
+
+    public PedidosService(MesasServicio mesasServicio) {
+        this.mesasServicio = mesasServicio;
+    }
 
     public List<Producto> listarProductos(String categoria, String busqueda) {
         String termino = busqueda == null ? "" : busqueda.trim().toLowerCase(Locale.ROOT);
@@ -111,6 +116,8 @@ public class PedidosService {
             throw new IllegalArgumentException("El pedido no tiene productos.");
         }
 
+        int idMesa = parseIdMesa(request.mesa());
+
         List<String> lineas = new ArrayList<>();
         for (ItemPedido item : request.items()) {
             Producto producto = buscarProducto(item.productoId());
@@ -128,12 +135,28 @@ public class PedidosService {
         TicketCocina ticket = new TicketCocina(
                 ticketCounter++,
                 request.cliente(),
-                request.mesa(),
+                String.valueOf(idMesa),
                 nota,
                 List.copyOf(lineas));
 
         colaPedidos.encolar(ticket);
+        mesasServicio.marcarEnUso(idMesa);
         return ticket;
+    }
+
+    private int parseIdMesa(String mesa) {
+        if (mesa == null || mesa.isBlank()) {
+            throw new IllegalArgumentException("Debe indicar el ID numérico de la mesa.");
+        }
+        try {
+            int idMesa = Integer.parseInt(mesa.trim());
+            if (idMesa <= 0) {
+                throw new IllegalArgumentException("ID de mesa inválido: " + mesa);
+            }
+            return idMesa;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("ID de mesa inválido: " + mesa);
+        }
     }
 
     public List<TicketCocina> listarTicketsPendientes() {

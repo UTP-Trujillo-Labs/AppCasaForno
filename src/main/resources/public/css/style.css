@@ -774,6 +774,9 @@ button:hover {
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s;
   user-select: none;
+  font: inherit;
+  padding: 0;
+  width: 100%;
 }
 
 .mesa:hover {

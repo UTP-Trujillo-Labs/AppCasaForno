@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class ApplicationFactory {
 
-    private final PedidosService pedidosService = new PedidosService();
     private final MesasServicio mesasServicio = new MesasServicio();
+    private final PedidosService pedidosService = new PedidosService(mesasServicio);
     private final CategoriaServicio categoriaServicio = new CategoriaServicio();
 
     public List<ServletRegistration> crearRegistrosServlets() {

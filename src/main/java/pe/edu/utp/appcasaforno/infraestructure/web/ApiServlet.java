@@ -41,7 +41,7 @@ public class ApiServlet extends HttpServlet {
         JsonUtil.prepareJsonResponse(resp);
         try {
             String path = JsonUtil.normalizePath(req.getPathInfo());
-            ApiHandler handler = handlers.get(path);
+            ApiHandler handler = resolveHandler(handlers, path);
             if (handler == null) {
                 JsonUtil.writeError(resp, HttpServletResponse.SC_NOT_FOUND, "Ruta no encontrada.");
                 return;
@@ -50,5 +50,16 @@ public class ApiServlet extends HttpServlet {
         } catch (IllegalArgumentException ex) {
             JsonUtil.writeError(resp, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
         }
+    }
+
+    private ApiHandler resolveHandler(Map<String, ApiHandler> handlers, String path) {
+        ApiHandler handler = handlers.get(path);
+        if (handler != null) {
+            return handler;
+        }
+        if (path != null && path.matches("/\\d+")) {
+            return handlers.get("/{numero}");
+        }
+        return null;
     }
 }

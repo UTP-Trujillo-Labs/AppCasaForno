@@ -64,7 +64,7 @@ function renderMesasSelect(state) {
     '<option value="">Selecciona una mesa</option>',
     ...state.mesasDisponibles.map(
       (mesa) =>
-        `<option value="${String(mesa.numero).padStart(2, "0")}">Mesa ${mesa.numero}</option>`
+        `<option value="${mesa.numero}">Mesa ${mesa.numero}</option>`
     ),
   ].join("");
 }
@@ -221,6 +221,8 @@ async function enviarACocina(state) {
 
     alert(`Pedido enviado a cocina\nTicket #${result.ticket}\nCliente: ${result.cliente}\nMesa: ${result.mesa}`);
     anularPedido(state);
+    await fetchMesasDisponibles(state);
+    renderMesasSelect(state);
   } catch (err) {
     console.error(err);
     alert("Error al enviar el pedido a cocina.");

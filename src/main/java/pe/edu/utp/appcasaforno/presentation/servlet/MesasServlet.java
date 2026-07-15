@@ -12,7 +12,7 @@ public class MesasServlet extends ApiServlet {
 
     public MesasServlet(MesasServicio mesasServicio) {
         Map<String, ApiHandler> getHandlers = Map.of("/", new ListarMesasHandler(mesasServicio));
-        Map<String, ApiHandler> postHandlers = Map.of("/cocina", new ActualizarMesaHandler(mesasServicio));
+        Map<String, ApiHandler> postHandlers = Map.of("/{numero}", new ActualizarMesaHandler(mesasServicio));
 
         super(getHandlers, postHandlers);
     }
