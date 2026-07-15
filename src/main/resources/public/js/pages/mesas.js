@@ -44,22 +44,15 @@ function renderMesas(mesas) {
     .join("");
 
   grid.querySelectorAll(".mesa").forEach((mesaEl) => {
-    mesaEl.addEventListener("click", () => cycleMesaEstado(mesaEl));
+    mesaEl.addEventListener("click", () => avanzarEstadoMesa(mesaEl));
   });
 }
 
-async function cycleMesaEstado(mesaEl) {
+async function avanzarEstadoMesa(mesaEl) {
   const idMesa = Number(mesaEl.dataset.mesa);
-  const actual = ESTADOS_MESA.find((e) => mesaEl.classList.contains(`mesa-${e}`)) || "libre";
-  const siguiente = ESTADOS_MESA[(ESTADOS_MESA.indexOf(actual) + 1) % ESTADOS_MESA.length];
 
   try {
-    const response = await fetch(`/api/mesas/${idMesa}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ estado: siguiente }),
-    });
-
+    const response = await fetch(`/api/mesas/${idMesa}`, { method: "POST" });
     const result = await response.json();
     if (!response.ok) {
       alert(result.error || "No se pudo actualizar la mesa.");
@@ -69,7 +62,8 @@ async function cycleMesaEstado(mesaEl) {
     const clases = ESTADOS_MESA.map((e) => `mesa-${e}`);
     mesaEl.classList.remove(...clases);
     mesaEl.classList.add(`mesa-${result.estado}`);
-    mesaEl.querySelector(".mesa-estado").textContent = ESTADO_LABELS[result.estado] || result.estado;
+    mesaEl.querySelector(".mesa-estado").textContent =
+      ESTADO_LABELS[result.estado] || result.estado;
   } catch (err) {
     console.error(err);
     alert("Error al actualizar el estado de la mesa.");

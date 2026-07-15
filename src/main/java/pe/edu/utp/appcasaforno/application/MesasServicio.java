@@ -1,13 +1,13 @@
 package pe.edu.utp.appcasaforno.application;
 
-import pe.edu.utp.appcasaforno.domain.model.EstadoMesa;
 import pe.edu.utp.appcasaforno.domain.model.Mesa;
 import pe.edu.utp.appcasaforno.domain.model.MesasResumen;
+import pe.edu.utp.appcasaforno.domain.state.mesa.MesaContext;
 import pe.edu.utp.appcasaforno.infraestructure.persistence.MesasStore;
 
 /**
  * Servicio de acceso y control de mesas.
- * Delega la persistencia a {@link MesasStore}.
+ * Las transiciones de estado se delegan al patrón State ({@link MesaContext}).
  */
 public class MesasServicio {
 
@@ -30,36 +30,24 @@ public class MesasServicio {
                 .orElseThrow(() -> new IllegalArgumentException("Mesa no encontrada: " + idMesa));
     }
 
-    public Mesa actualizarEstado(int idMesa, EstadoMesa estado) {
-        obtenerPorId(idMesa);
-        return mesasStore.actualizarEstado(idMesa, estado);
+    /**
+     * Avanza el estado según la secuencia de control:
+     * libre → reservada → libre; ocupada → libre.
+     */
+    public Mesa avanzarEstado(int idMesa) {
+        Mesa mesa = obtenerPorId(idMesa);
+        MesaContext context = new MesaContext(mesa);
+        context.avanzar();
+        return mesasStore.actualizarEstado(idMesa, context.getEstado());
     }
 
     /**
-     * Marca la mesa como ocupada al generar un pedido.
-     * Solo permite ocupar mesas en estado libre.
+     * Marca la mesa como ocupada al generar un pedido (solo desde libre).
      */
     public Mesa marcarEnUso(int idMesa) {
         Mesa mesa = obtenerPorId(idMesa);
-        if (mesa.estado() == EstadoMesa.OCUPADA) {
-            throw new IllegalArgumentException("La mesa " + idMesa + " ya está ocupada.");
-        }
-        if (mesa.estado() == EstadoMesa.RESERVADA) {
-            throw new IllegalArgumentException("La mesa " + idMesa + " está reservada.");
-        }
-        return mesasStore.actualizarEstado(idMesa, EstadoMesa.OCUPADA);
-    }
-
-    public Mesa liberar(int idMesa) {
-        obtenerPorId(idMesa);
-        return mesasStore.actualizarEstado(idMesa, EstadoMesa.LIBRE);
-    }
-
-    public Mesa reservar(int idMesa) {
-        Mesa mesa = obtenerPorId(idMesa);
-        if (mesa.estado() == EstadoMesa.OCUPADA) {
-            throw new IllegalArgumentException("No se puede reservar la mesa " + idMesa + ": está ocupada.");
-        }
-        return mesasStore.actualizarEstado(idMesa, EstadoMesa.RESERVADA);
+        MesaContext context = new MesaContext(mesa);
+        context.ocupar();
+        return mesasStore.actualizarEstado(idMesa, context.getEstado());
     }
 }
