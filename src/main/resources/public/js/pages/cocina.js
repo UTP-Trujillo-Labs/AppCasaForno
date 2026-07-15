@@ -9,7 +9,7 @@ async function cargarPedidosPendientes() {
   if (!grid) return;
 
   try {
-    const response = await fetch("/api/pedidos/pendientes");
+    const response = await fetch("/api/cocina/");
     if (!response.ok) throw new Error("Error al obtener pedidos pendientes");
 
     const pedidos = await response.json();

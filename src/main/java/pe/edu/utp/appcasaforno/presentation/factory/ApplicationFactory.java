@@ -5,6 +5,7 @@ import pe.edu.utp.appcasaforno.application.MesasServicio;
 import pe.edu.utp.appcasaforno.application.PedidosService;
 import pe.edu.utp.appcasaforno.domain.api.ServletRegistration;
 import pe.edu.utp.appcasaforno.presentation.servlet.CategoriasServlet;
+import pe.edu.utp.appcasaforno.presentation.servlet.CocinaServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.MesasServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.PedidosServlet;
 
@@ -23,6 +24,8 @@ public class ApplicationFactory {
         return List.of(
                 new ServletRegistration("pedidosServlet", "/api/pedidos/*",
                         new PedidosServlet(pedidosService)),
+                new ServletRegistration("cocinaServlet", "/api/cocina/*",
+                        new CocinaServlet(pedidosService)),
                 new ServletRegistration("categoriasServlet", "/api/categorias/*",
                         new CategoriasServlet(categoriaServicio)),
                 new ServletRegistration("mesasServlet", "/api/mesas/*",

@@ -203,7 +203,7 @@ async function enviarACocina(state) {
 
   try {
     // Ir al metodo JAVA para enviar el pedido a cocina
-    const response = await fetch("/api/pedidos/cocina", {
+    const response = await fetch("/api/cocina/", {
       method: "POST",
       headers: { "Content-Type": "application/json" }, // Indicar el tipo de dato que se envia al JAVA
       body: JSON.stringify(payload), // Convertir el objeto a JSON
