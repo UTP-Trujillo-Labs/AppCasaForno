@@ -816,6 +816,162 @@ button:hover {
   color: #e65100;
 }
 
+/* ── Modal pago de mesa ── */
+.mesa-pago-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(26, 23, 20, 0.45);
+}
+
+.mesa-pago-modal[hidden] {
+  display: none;
+}
+
+.mesa-pago-dialog {
+  width: min(420px, 100%);
+  max-height: min(80vh, 640px);
+  display: flex;
+  flex-direction: column;
+  background: #fffdf8;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.mesa-pago-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid #e8e4dc;
+}
+
+.mesa-pago-header h3 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1714;
+}
+
+.mesa-pago-cerrar {
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+}
+
+.mesa-pago-cerrar:hover {
+  color: #1a1714;
+}
+
+.mesa-pago-contenido {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.15rem;
+}
+
+.mesa-pago-vacio {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.mesa-pago-hint {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.mesa-pago-ticket {
+  background: #fff;
+  border: 1px solid #e8e4dc;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.mesa-pago-ticket:last-child {
+  margin-bottom: 0;
+}
+
+.mesa-pago-ticket-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.65rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.9rem;
+  color: #1a1714;
+}
+
+.mesa-pago-items {
+  list-style: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #1a1714;
+}
+
+.mesa-pago-nota {
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed #ddd;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+}
+
+.mesa-pago-acciones {
+  display: flex;
+  gap: 0.65rem;
+  padding: 1rem 1.15rem;
+  border-top: 1px solid #e8e4dc;
+}
+
+.btn-mesa-cancelar,
+.btn-mesa-pagar {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.btn-mesa-cancelar {
+  background: #ebe6dc;
+  color: #1a1714;
+}
+
+.btn-mesa-cancelar:hover {
+  background: #ddd6c8;
+}
+
+.btn-mesa-pagar {
+  background: #4c7c3c;
+  color: #fff;
+}
+
+.btn-mesa-pagar:hover:not(:disabled) {
+  background: #3f6a31;
+}
+
+.btn-mesa-pagar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 /* ── Data table ── */
 .data-table {
   width: 100%;

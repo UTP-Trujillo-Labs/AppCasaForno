@@ -7,4 +7,18 @@
   <div class="mesas-grid" id="mesas-grid">
     <p class="content-loading">Cargando mesas...</p>
   </div>
+
+  <div id="mesa-pago-modal" class="mesa-pago-modal" hidden>
+    <div class="mesa-pago-dialog" role="dialog" aria-modal="true" aria-labelledby="mesa-pago-titulo">
+      <header class="mesa-pago-header">
+        <h3 id="mesa-pago-titulo">Pedido de la mesa</h3>
+        <button type="button" id="mesa-pago-cerrar" class="mesa-pago-cerrar" aria-label="Cerrar">×</button>
+      </header>
+      <div id="mesa-pago-contenido" class="mesa-pago-contenido"></div>
+      <footer class="mesa-pago-acciones">
+        <button type="button" id="mesa-pago-cancelar" class="btn-mesa-cancelar">Cancelar</button>
+        <button type="button" id="mesa-pago-confirmar" class="btn-mesa-pagar">Pagar</button>
+      </footer>
+    </div>
+  </div>
 </section>

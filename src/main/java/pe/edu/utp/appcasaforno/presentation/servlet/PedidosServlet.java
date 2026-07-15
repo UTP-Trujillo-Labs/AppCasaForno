@@ -14,8 +14,11 @@ public class PedidosServlet extends ApiServlet {
                 "/productos", new ListarProductosHandler(pedidosService),
                 "/pendientes", new ListarPedidosPendientesHandler(pedidosService),
                 "/completados", new ListarPedidosCompletadosHandler(pedidosService),
-                "/cocina", new ListarCocinaHandler(pedidosService));
-        Map<String, ApiHandler> postHandlers = Map.of("/cocina", new EnviarCocinaHandler(pedidosService));
+                "/cocina", new ListarCocinaHandler(pedidosService),
+                "/mesa/{numero}", new ListarPedidosPorMesaHandler(pedidosService));
+        Map<String, ApiHandler> postHandlers = Map.of(
+                "/cocina", new EnviarCocinaHandler(pedidosService),
+                "/mesa/{numero}/pagar", new CobrarMesaHandler(pedidosService));
 
         super(getHandlers, postHandlers);
     }

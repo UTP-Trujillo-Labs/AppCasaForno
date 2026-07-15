@@ -169,4 +169,20 @@ public class PedidosService {
             case COMPLETADO -> historicoPedidos.listar();
         };
     }
+
+    public List<TicketCocina> listarPedidosPorMesa(int idMesa) {
+        mesasServicio.obtenerPorId(idMesa);
+        return colaPedidos.listarPorMesa(idMesa);
+    }
+
+    /**
+     * Cobra la mesa: archiva sus pedidos pendientes y libera la mesa (ocupada → libre).
+     */
+    public Mesa cobrarMesa(int idMesa) {
+        List<TicketCocina> pedidos = colaPedidos.extraerPorMesa(idMesa);
+        for (TicketCocina pedido : pedidos) {
+            historicoPedidos.registrar(pedido);
+        }
+        return mesasServicio.avanzarEstado(idMesa);
+    }
 }
