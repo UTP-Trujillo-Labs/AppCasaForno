@@ -119,6 +119,7 @@ public class PedidosService {
         int idMesa = parseIdMesa(request.mesa());
 
         List<String> lineas = new ArrayList<>();
+        double total = 0;
         for (ItemPedido item : request.items()) {
             Producto producto = buscarProducto(item.productoId());
             if (producto == null) {
@@ -128,6 +129,7 @@ public class PedidosService {
                 throw new IllegalArgumentException("Cantidad inválida para: " + item.productoId());
             }
             lineas.add(item.cantidad() + "x " + producto.nombre());
+            total += producto.precio() * item.cantidad();
         }
 
         String nota = request.nota() == null ? "" : request.nota().trim();
@@ -138,7 +140,8 @@ public class PedidosService {
                 String.valueOf(idMesa),
                 nota,
                 List.copyOf(lineas),
-                EstadoPedido.PENDIENTE);
+                EstadoPedido.PENDIENTE,
+                total);
 
         colaPedidos.encolar(ticket);
         mesasServicio.marcarEnUso(idMesa);
@@ -180,7 +183,7 @@ public class PedidosService {
     public List<TicketCocina> listarPedidosPorEstado(EstadoPedido estado) {
         return switch (estado) {
             case PENDIENTE -> colaPedidos.listar();
-            case COMPLETADO -> historicoPedidos.listar();
+            case COMPLETADO, PAGADO -> historicoPedidos.listar();
         };
     }
 
@@ -188,12 +191,13 @@ public class PedidosService {
         mesasServicio.obtenerPorId(idMesa);
         List<TicketCocina> pedidos = new ArrayList<>();
         pedidos.addAll(colaPedidos.listarPorMesa(idMesa));
-        pedidos.addAll(historicoPedidos.listarPorMesa(idMesa));
+        pedidos.addAll(historicoPedidos.listarCompletadosPorMesa(idMesa));
         return List.copyOf(pedidos);
     }
 
     /**
-     * Cobra la mesa solo si todos sus pedidos están COMPLETADOS y libera la mesa.
+     * Cobra la mesa solo si todos sus pedidos están COMPLETADOS,
+     * los marca como PAGADO (quedan en histórico) y libera la mesa.
      */
     public Mesa cobrarMesa(int idMesa) {
         mesasServicio.obtenerPorId(idMesa);
@@ -203,13 +207,13 @@ public class PedidosService {
                     "La mesa " + idMesa + " aún tiene pedidos pendientes en cocina.");
         }
 
-        List<TicketCocina> completados = historicoPedidos.listarPorMesa(idMesa);
+        List<TicketCocina> completados = historicoPedidos.listarCompletadosPorMesa(idMesa);
         if (completados.isEmpty()) {
             throw new IllegalArgumentException(
                     "La mesa " + idMesa + " no tiene pedidos completados para cobrar.");
         }
 
-        historicoPedidos.extraerPorMesa(idMesa);
+        historicoPedidos.marcarPagadosPorMesa(idMesa);
         return mesasServicio.avanzarEstado(idMesa);
     }
 }

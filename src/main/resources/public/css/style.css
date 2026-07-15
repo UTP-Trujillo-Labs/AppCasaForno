@@ -151,6 +151,44 @@ body {
   margin-bottom: 1rem;
 }
 
+.panel-full {
+  margin-bottom: 1.5rem;
+}
+
+.reporte-panel .reporte-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.reporte-panel .reporte-header h3 {
+  margin-bottom: 0;
+}
+
+.reporte-resumen {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.reporte-table-wrap {
+  overflow-x: auto;
+}
+
+.reporte-items {
+  max-width: 280px;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.reporte-monto {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 /* ── Forms ── */
 .form-inline {
   display: flex;
@@ -343,6 +381,12 @@ button:hover {
   background: #d4edda;
   color: #1e6b36;
   border: 1px solid #7cbc8a;
+}
+
+.estado-pedido-pagado {
+  background: #dce9f7;
+  color: #1a4f7a;
+  border: 1px solid #7aa8cf;
 }
 
 .ticket-divider {
@@ -971,6 +1015,14 @@ button:hover {
   font-size: 0.85rem;
   color: #666;
   font-style: italic;
+}
+
+.app-modal-total {
+  margin-top: 0.65rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1714;
 }
 
 .app-modal-acciones {

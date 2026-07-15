@@ -124,6 +124,7 @@ function renderPedidoHtml(pedidos) {
           ${(pedido.items || []).map((item) => `<li>${item}</li>`).join("")}
         </ul>
         ${pedido.nota ? `<p class="app-modal-nota">Nota: ${pedido.nota}</p>` : ""}
+        <p class="app-modal-total">Total: ${App.formatMoney(pedido.total)}</p>
       </article>`;
     })
     .join("");

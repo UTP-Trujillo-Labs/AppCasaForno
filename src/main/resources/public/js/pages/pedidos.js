@@ -130,7 +130,7 @@ function renderProductos(state) {
       <article class="producto-card">
         <img src="${p.imagen}" alt="${p.nombre}" class="producto-img" />
         <h3 class="producto-nombre">${p.nombre}</h3>
-        <p class="producto-precio">$ ${p.precio.toFixed(2)}</p>
+        <p class="producto-precio">${App.formatMoney(p.precio)}</p>
         <button type="button" class="btn-agregar" data-producto-id="${p.id}">+ Agregar</button>
       </article>`
     )
@@ -164,7 +164,7 @@ function renderCarrito(state) {
 
   if (state.carrito.length === 0) {
     lista.innerHTML = '<li class="pedido-items-empty">Sin productos en el pedido.</li>';
-    totalEl.textContent = "$ 0.00";
+    totalEl.textContent = App.formatMoney(0);
     return;
   }
 
@@ -173,7 +173,7 @@ function renderCarrito(state) {
     .join("");
 
   const total = state.carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-  totalEl.textContent = `$ ${total.toFixed(2)}`;
+  totalEl.textContent = App.formatMoney(total);
 }
 
 async function enviarACocina(state) {
@@ -248,6 +248,7 @@ function mostrarPedidoCreadoModal(pedido) {
         ${(pedido.items || []).map((item) => `<li>${item}</li>`).join("")}
       </ul>
       ${pedido.nota ? `<p class="app-modal-nota">Nota: ${pedido.nota}</p>` : ""}
+      <p class="app-modal-total">Total: ${App.formatMoney(pedido.total)}</p>
     </article>
     <p class="app-modal-hint">${pedido.message || "El pedido fue enviado a cocina."}</p>`;
 

@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum EstadoPedido {
     PENDIENTE("pendiente"),
-    COMPLETADO("completado");
+    COMPLETADO("completado"),
+    PAGADO("pagado");
 
     private final String value;
 

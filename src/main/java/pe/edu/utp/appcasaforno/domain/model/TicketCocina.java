@@ -8,9 +8,14 @@ public record TicketCocina(
         String mesa,
         String nota,
         List<String> items,
-        EstadoPedido estado) {
+        EstadoPedido estado,
+        double total) {
 
     public TicketCocina marcarCompletado() {
-        return new TicketCocina(ticket, cliente, mesa, nota, items, EstadoPedido.COMPLETADO);
+        return new TicketCocina(ticket, cliente, mesa, nota, items, EstadoPedido.COMPLETADO, total);
+    }
+
+    public TicketCocina marcarPagado() {
+        return new TicketCocina(ticket, cliente, mesa, nota, items, EstadoPedido.PAGADO, total);
     }
 }

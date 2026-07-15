@@ -1,5 +1,6 @@
 package pe.edu.utp.appcasaforno.infraestructure.persistence;
 
+import pe.edu.utp.appcasaforno.domain.model.EstadoPedido;
 import pe.edu.utp.appcasaforno.domain.model.TicketCocina;
 
 import java.util.ArrayList;
@@ -24,17 +25,22 @@ public class HistoricoPedidos {
                 .toList();
     }
 
-    public List<TicketCocina> extraerPorMesa(int idMesa) {
+    public List<TicketCocina> listarCompletadosPorMesa(int idMesa) {
         String mesa = String.valueOf(idMesa);
-        List<TicketCocina> extraidos = new ArrayList<>();
-        pedidos.removeIf(pedido -> {
-            if (mesa.equals(pedido.mesa())) {
-                extraidos.add(pedido);
-                return true;
+        return pedidos.stream()
+                .filter(pedido -> mesa.equals(pedido.mesa()))
+                .filter(pedido -> pedido.estado() == EstadoPedido.COMPLETADO)
+                .toList();
+    }
+
+    public void marcarPagadosPorMesa(int idMesa) {
+        String mesa = String.valueOf(idMesa);
+        for (int i = 0; i < pedidos.size(); i++) {
+            TicketCocina pedido = pedidos.get(i);
+            if (mesa.equals(pedido.mesa()) && pedido.estado() == EstadoPedido.COMPLETADO) {
+                pedidos.set(i, pedido.marcarPagado());
             }
-            return false;
-        });
-        return List.copyOf(extraidos);
+        }
     }
 
     public int size() {
