@@ -2,6 +2,17 @@ const App = {
   DEFAULT_PAGE: "pedidos",
   VALID_PAGES: ["pedidos", "cocina", "mesas", "inventario", "delivery"],
 
+  ESTADOS_MESA: ["libre", "ocupada", "reservada"],
+  ESTADO_MESA_LABELS: {
+    libre: "Libre",
+    ocupada: "Ocupada",
+    reservada: "Reservada",
+  },
+  ESTADO_PEDIDO_LABELS: {
+    pendiente: "Pendiente",
+    completado: "Completado",
+  },
+
   pages: {},
   loadedScripts: new Set(),
 

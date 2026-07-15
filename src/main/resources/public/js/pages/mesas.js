@@ -1,6 +1,3 @@
-const ESTADOS_MESA = ["libre", "ocupada", "reservada"];
-const ESTADO_LABELS = { libre: "Libre", ocupada: "Ocupada", reservada: "Reservada" };
-
 App.registerPage("mesas", initMesas);
 
 async function initMesas() {
@@ -35,11 +32,11 @@ function renderMesas(mesas) {
 
   grid.innerHTML = mesas
     .map((mesa) => {
-      const estado = ESTADOS_MESA.includes(mesa.estado) ? mesa.estado : "libre";
+      const estado = App.ESTADOS_MESA.includes(mesa.estado) ? mesa.estado : "libre";
       return `
         <button type="button" class="mesa mesa-${estado}" data-mesa="${mesa.numero}">
           <span class="mesa-num">${mesa.numero}</span>
-          <span class="mesa-estado">${ESTADO_LABELS[estado]}</span>
+          <span class="mesa-estado">${App.ESTADO_MESA_LABELS[estado]}</span>
         </button>`;
     })
     .join("");
@@ -52,7 +49,7 @@ function renderMesas(mesas) {
 async function avanzarEstadoMesa(mesaEl) {
   const idMesa = Number(mesaEl.dataset.mesa);
   const estadoActual =
-    ESTADOS_MESA.find((e) => mesaEl.classList.contains(`mesa-${e}`)) || "libre";
+    App.ESTADOS_MESA.find((e) => mesaEl.classList.contains(`mesa-${e}`)) || "libre";
 
   if (estadoActual === "ocupada") {
     await mostrarConfirmacionPago(mesaEl, idMesa);
@@ -84,35 +81,51 @@ async function mostrarConfirmacionPago(mesaEl, idMesa) {
     }
 
     contenido.innerHTML = renderPedidoHtml(pedidos);
-    btnPagar.disabled = false;
+    const listosParaPagar = puedeCobrar(pedidos);
+    btnPagar.disabled = !listosParaPagar;
     btnPagar._mesaEl = mesaEl;
+    if (!listosParaPagar && pedidos.length) {
+      contenido.insertAdjacentHTML(
+        "beforeend",
+        '<p class="app-modal-hint">El pago se habilita cuando todos los pedidos estén completados en cocina.</p>'
+      );
+    }
   } catch (err) {
     console.error(err);
     contenido.innerHTML = '<p class="content-error">Error al cargar el pedido de la mesa.</p>';
   }
 }
 
+function puedeCobrar(pedidos) {
+  if (!pedidos.length) return false;
+  return pedidos.every((pedido) => pedido.estado === "completado");
+}
+
 function renderPedidoHtml(pedidos) {
   if (!pedidos.length) {
     return `
-      <p class="app-modal-vacio">Esta mesa no tiene pedidos pendientes registrados.</p>
-      <p class="app-modal-hint">Al pagar, la mesa pasará a estado libre.</p>`;
+      <p class="app-modal-vacio">Esta mesa no tiene pedidos registrados.</p>
+      <p class="app-modal-hint">Cuando cocina despache el pedido, podrás cobrar la mesa.</p>`;
   }
 
   return pedidos
-    .map(
-      (pedido) => `
+    .map((pedido) => {
+      const estado = pedido.estado || "pendiente";
+      return `
       <article class="app-modal-ticket">
         <header class="app-modal-ticket-header">
-          <strong>Ticket #${pedido.ticket}</strong>
+          <div class="app-modal-ticket-title">
+            <strong>Ticket #${pedido.ticket}</strong>
+            <span class="estado-pedido estado-pedido-${estado}">${App.ESTADO_PEDIDO_LABELS[estado] || estado}</span>
+          </div>
           <span>Cliente: ${pedido.cliente || "—"}</span>
         </header>
         <ul class="app-modal-items">
           ${(pedido.items || []).map((item) => `<li>${item}</li>`).join("")}
         </ul>
         ${pedido.nota ? `<p class="app-modal-nota">Nota: ${pedido.nota}</p>` : ""}
-      </article>`
-    )
+      </article>`;
+    })
     .join("");
 }
 
@@ -182,8 +195,8 @@ async function aplicarAvanceEstado(mesaEl, idMesa) {
 }
 
 function actualizarVistaMesa(mesaEl, estado) {
-  const clases = ESTADOS_MESA.map((e) => `mesa-${e}`);
+  const clases = App.ESTADOS_MESA.map((e) => `mesa-${e}`);
   mesaEl.classList.remove(...clases);
   mesaEl.classList.add(`mesa-${estado}`);
-  mesaEl.querySelector(".mesa-estado").textContent = ESTADO_LABELS[estado] || estado;
+  mesaEl.querySelector(".mesa-estado").textContent = App.ESTADO_MESA_LABELS[estado] || estado;
 }

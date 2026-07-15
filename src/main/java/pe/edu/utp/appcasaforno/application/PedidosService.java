@@ -137,11 +137,25 @@ public class PedidosService {
                 request.cliente(),
                 String.valueOf(idMesa),
                 nota,
-                List.copyOf(lineas));
+                List.copyOf(lineas),
+                EstadoPedido.PENDIENTE);
 
         colaPedidos.encolar(ticket);
         mesasServicio.marcarEnUso(idMesa);
         return ticket;
+    }
+
+    /**
+     * Despacha un ticket de cocina: PENDIENTE → COMPLETADO.
+     */
+    public TicketCocina despacharPedido(int numeroTicket) {
+        TicketCocina pendiente = colaPedidos.extraerPorTicket(numeroTicket)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Pedido pendiente no encontrado: " + numeroTicket));
+
+        TicketCocina completado = pendiente.marcarCompletado();
+        historicoPedidos.registrar(completado);
+        return completado;
     }
 
     private int parseIdMesa(String mesa) {
@@ -172,17 +186,30 @@ public class PedidosService {
 
     public List<TicketCocina> listarPedidosPorMesa(int idMesa) {
         mesasServicio.obtenerPorId(idMesa);
-        return colaPedidos.listarPorMesa(idMesa);
+        List<TicketCocina> pedidos = new ArrayList<>();
+        pedidos.addAll(colaPedidos.listarPorMesa(idMesa));
+        pedidos.addAll(historicoPedidos.listarPorMesa(idMesa));
+        return List.copyOf(pedidos);
     }
 
     /**
-     * Cobra la mesa: archiva sus pedidos pendientes y libera la mesa (ocupada → libre).
+     * Cobra la mesa solo si todos sus pedidos están COMPLETADOS y libera la mesa.
      */
     public Mesa cobrarMesa(int idMesa) {
-        List<TicketCocina> pedidos = colaPedidos.extraerPorMesa(idMesa);
-        for (TicketCocina pedido : pedidos) {
-            historicoPedidos.registrar(pedido);
+        mesasServicio.obtenerPorId(idMesa);
+        List<TicketCocina> pendientes = colaPedidos.listarPorMesa(idMesa);
+        if (!pendientes.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La mesa " + idMesa + " aún tiene pedidos pendientes en cocina.");
         }
+
+        List<TicketCocina> completados = historicoPedidos.listarPorMesa(idMesa);
+        if (completados.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La mesa " + idMesa + " no tiene pedidos completados para cobrar.");
+        }
+
+        historicoPedidos.extraerPorMesa(idMesa);
         return mesasServicio.avanzarEstado(idMesa);
     }
 }

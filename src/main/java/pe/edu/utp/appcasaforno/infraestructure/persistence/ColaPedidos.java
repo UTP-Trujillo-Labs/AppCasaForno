@@ -48,6 +48,14 @@ public class ColaPedidos {
         return List.copyOf(extraidos);
     }
 
+    public Optional<TicketCocina> extraerPorTicket(int numeroTicket) {
+        Optional<TicketCocina> encontrado = cola.stream()
+                .filter(pedido -> pedido.ticket() == numeroTicket)
+                .findFirst();
+        encontrado.ifPresent(cola::remove);
+        return encontrado;
+    }
+
     public int size() {
         return cola.size();
     }

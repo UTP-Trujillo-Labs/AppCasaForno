@@ -60,6 +60,9 @@ public class ApiServlet extends HttpServlet {
         if (path == null) {
             return null;
         }
+        if (path.matches("/\\d+/despachar")) {
+            return handlers.get("/{ticket}/despachar");
+        }
         if (path.matches("/\\d+")) {
             return handlers.get("/{numero}");
         }

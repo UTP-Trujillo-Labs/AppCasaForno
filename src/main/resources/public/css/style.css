@@ -298,12 +298,19 @@ button:hover {
   flex-direction: column;
 }
 
+.ticket-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
 .ticket-header h3 {
   font-family: "Segoe UI", Arial, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   color: #1a1714;
-  margin-bottom: 0.15rem;
 }
 
 .ticket-mesa {
@@ -311,6 +318,31 @@ button:hover {
   font-size: 0.95rem;
   font-weight: 600;
   color: #333;
+}
+
+.estado-pedido {
+  display: inline-block;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.estado-pedido-pendiente {
+  background: #fff3cd;
+  color: #8a6d1b;
+  border: 1px solid #e0c35a;
+}
+
+.estado-pedido-completado {
+  background: #d4edda;
+  color: #1e6b36;
+  border: 1px solid #7cbc8a;
 }
 
 .ticket-divider {
@@ -382,8 +414,13 @@ button:hover {
   transition: background 0.2s;
 }
 
-.btn-despachar:hover {
+.btn-despachar:hover:not(:disabled) {
   background: #4cae4c;
+}
+
+.btn-despachar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .ticket-grid-empty {
@@ -910,6 +947,13 @@ button:hover {
   font-family: "Segoe UI", Arial, sans-serif;
   font-size: 0.9rem;
   color: #1a1714;
+}
+
+.app-modal-ticket-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .app-modal-items {
