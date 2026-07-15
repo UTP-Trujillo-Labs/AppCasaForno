@@ -95,22 +95,22 @@ async function mostrarConfirmacionPago(mesaEl, idMesa) {
 function renderPedidoHtml(pedidos) {
   if (!pedidos.length) {
     return `
-      <p class="mesa-pago-vacio">Esta mesa no tiene pedidos pendientes registrados.</p>
-      <p class="mesa-pago-hint">Al pagar, la mesa pasará a estado libre.</p>`;
+      <p class="app-modal-vacio">Esta mesa no tiene pedidos pendientes registrados.</p>
+      <p class="app-modal-hint">Al pagar, la mesa pasará a estado libre.</p>`;
   }
 
   return pedidos
     .map(
       (pedido) => `
-      <article class="mesa-pago-ticket">
-        <header class="mesa-pago-ticket-header">
+      <article class="app-modal-ticket">
+        <header class="app-modal-ticket-header">
           <strong>Ticket #${pedido.ticket}</strong>
           <span>Cliente: ${pedido.cliente || "—"}</span>
         </header>
-        <ul class="mesa-pago-items">
+        <ul class="app-modal-items">
           ${(pedido.items || []).map((item) => `<li>${item}</li>`).join("")}
         </ul>
-        ${pedido.nota ? `<p class="mesa-pago-nota">Nota: ${pedido.nota}</p>` : ""}
+        ${pedido.nota ? `<p class="app-modal-nota">Nota: ${pedido.nota}</p>` : ""}
       </article>`
     )
     .join("");

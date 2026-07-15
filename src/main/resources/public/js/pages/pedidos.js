@@ -10,6 +10,7 @@ function initPedidos() {
     mesasDisponibles: [],
   };
 
+  bindPedidoCreadoModal();
   bindPedidosEvents(state);
   cargarPedidos(state);
 }
@@ -219,7 +220,7 @@ async function enviarACocina(state) {
       return;
     }
 
-    alert(`Pedido enviado a cocina\nTicket #${result.ticket}\nCliente: ${result.cliente}\nMesa: ${result.mesa}`);
+    mostrarPedidoCreadoModal({ ...result, nota });
     anularPedido(state);
     await fetchMesasDisponibles(state);
     renderMesasSelect(state);
@@ -227,6 +228,47 @@ async function enviarACocina(state) {
     console.error(err);
     alert("Error al enviar el pedido a cocina.");
   }
+}
+
+function mostrarPedidoCreadoModal(pedido) {
+  const modal = document.getElementById("pedido-creado-modal");
+  const titulo = document.getElementById("pedido-creado-titulo");
+  const contenido = document.getElementById("pedido-creado-contenido");
+  if (!modal || !titulo || !contenido) return;
+
+  titulo.textContent = `Pedido enviado — Ticket #${pedido.ticket}`;
+  contenido.innerHTML = `
+    <article class="app-modal-ticket">
+      <header class="app-modal-ticket-header">
+        <strong>Ticket #${pedido.ticket}</strong>
+        <span>Cliente: ${pedido.cliente || "—"}</span>
+        <span>Mesa: ${pedido.mesa || "—"}</span>
+      </header>
+      <ul class="app-modal-items">
+        ${(pedido.items || []).map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+      ${pedido.nota ? `<p class="app-modal-nota">Nota: ${pedido.nota}</p>` : ""}
+    </article>
+    <p class="app-modal-hint">${pedido.message || "El pedido fue enviado a cocina."}</p>`;
+
+  modal.hidden = false;
+}
+
+function cerrarPedidoCreadoModal() {
+  const modal = document.getElementById("pedido-creado-modal");
+  if (modal) modal.hidden = true;
+}
+
+function bindPedidoCreadoModal() {
+  const modal = document.getElementById("pedido-creado-modal");
+  if (!modal || modal.dataset.bound === "1") return;
+  modal.dataset.bound = "1";
+
+  document.getElementById("pedido-creado-cerrar")?.addEventListener("click", cerrarPedidoCreadoModal);
+  document.getElementById("pedido-creado-aceptar")?.addEventListener("click", cerrarPedidoCreadoModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) cerrarPedidoCreadoModal();
+  });
 }
 
 function anularPedido(state) {

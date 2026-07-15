@@ -816,8 +816,8 @@ button:hover {
   color: #e65100;
 }
 
-/* ── Modal pago de mesa ── */
-.mesa-pago-modal {
+/* ── Modal compartido ── */
+.app-modal {
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -828,11 +828,11 @@ button:hover {
   background: rgba(26, 23, 20, 0.45);
 }
 
-.mesa-pago-modal[hidden] {
+.app-modal[hidden] {
   display: none;
 }
 
-.mesa-pago-dialog {
+.app-modal-dialog {
   width: min(420px, 100%);
   max-height: min(80vh, 640px);
   display: flex;
@@ -843,7 +843,7 @@ button:hover {
   overflow: hidden;
 }
 
-.mesa-pago-header {
+.app-modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -852,14 +852,14 @@ button:hover {
   border-bottom: 1px solid #e8e4dc;
 }
 
-.mesa-pago-header h3 {
+.app-modal-header h3 {
   font-family: "Segoe UI", Arial, sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   color: #1a1714;
 }
 
-.mesa-pago-cerrar {
+.app-modal-cerrar {
   border: none;
   background: transparent;
   color: #666;
@@ -869,28 +869,28 @@ button:hover {
   padding: 0.15rem 0.35rem;
 }
 
-.mesa-pago-cerrar:hover {
+.app-modal-cerrar:hover {
   color: #1a1714;
 }
 
-.mesa-pago-contenido {
+.app-modal-contenido {
   flex: 1;
   overflow-y: auto;
   padding: 1rem 1.15rem;
 }
 
-.mesa-pago-vacio {
+.app-modal-vacio {
   color: #666;
   font-style: italic;
   margin-bottom: 0.5rem;
 }
 
-.mesa-pago-hint {
+.app-modal-hint {
   font-size: 0.85rem;
   color: #888;
 }
 
-.mesa-pago-ticket {
+.app-modal-ticket {
   background: #fff;
   border: 1px solid #e8e4dc;
   border-radius: 8px;
@@ -898,11 +898,11 @@ button:hover {
   margin-bottom: 0.75rem;
 }
 
-.mesa-pago-ticket:last-child {
+.app-modal-ticket:last-child {
   margin-bottom: 0;
 }
 
-.mesa-pago-ticket-header {
+.app-modal-ticket-header {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -912,7 +912,7 @@ button:hover {
   color: #1a1714;
 }
 
-.mesa-pago-items {
+.app-modal-items {
   list-style: none;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.95rem;
@@ -920,7 +920,7 @@ button:hover {
   color: #1a1714;
 }
 
-.mesa-pago-nota {
+.app-modal-nota {
   margin-top: 0.65rem;
   padding-top: 0.55rem;
   border-top: 1px dashed #ddd;
@@ -929,15 +929,15 @@ button:hover {
   font-style: italic;
 }
 
-.mesa-pago-acciones {
+.app-modal-acciones {
   display: flex;
   gap: 0.65rem;
   padding: 1rem 1.15rem;
   border-top: 1px solid #e8e4dc;
 }
 
-.btn-mesa-cancelar,
-.btn-mesa-pagar {
+.btn-modal-secundario,
+.btn-modal-primario {
   flex: 1;
   border: none;
   border-radius: 8px;
@@ -949,27 +949,36 @@ button:hover {
   transition: background 0.2s, opacity 0.2s;
 }
 
-.btn-mesa-cancelar {
+.btn-modal-secundario {
   background: #ebe6dc;
   color: #1a1714;
 }
 
-.btn-mesa-cancelar:hover {
+.btn-modal-secundario:hover {
   background: #ddd6c8;
 }
 
-.btn-mesa-pagar {
+.btn-modal-primario {
   background: #4c7c3c;
   color: #fff;
 }
 
-.btn-mesa-pagar:hover:not(:disabled) {
+.btn-modal-primario:hover:not(:disabled) {
   background: #3f6a31;
 }
 
-.btn-mesa-pagar:disabled {
+.btn-modal-primario:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.btn-modal-primario.btn-modal-acento {
+  background: #f0a243;
+  color: #1a1714;
+}
+
+.btn-modal-primario.btn-modal-acento:hover:not(:disabled) {
+  background: #e8942a;
 }
 
 /* ── Data table ── */
