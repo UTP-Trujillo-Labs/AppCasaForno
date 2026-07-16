@@ -4,6 +4,8 @@ import pe.edu.utp.appcasaforno.domain.model.EstadoMesa;
 
 /**
  * Estado concreto del patrón State para el control de mesas.
+ * Solo los estados que permiten una transición deben sobrescribirla;
+ * el resto hereda el rechazo por defecto.
  */
 public interface MesaState {
 
@@ -17,6 +19,11 @@ public interface MesaState {
 
     /**
      * Marca la mesa en uso al generar un pedido.
+     * Solo {@link LibreState} lo permite; en el resto se rechaza.
      */
-    void ocupar(MesaContext context);
+    default void ocupar(MesaContext context) {
+        throw new IllegalArgumentException(
+                "La mesa " + context.getIdMesa() + " no se puede ocupar porque está "
+                        + asEstado().getValue() + ".");
+    }
 }

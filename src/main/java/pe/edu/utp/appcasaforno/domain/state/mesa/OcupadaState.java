@@ -3,7 +3,8 @@ package pe.edu.utp.appcasaforno.domain.state.mesa;
 import pe.edu.utp.appcasaforno.domain.model.EstadoMesa;
 
 /**
- * Mesa ocupada: al avanzar vuelve a libre; no se puede volver a ocupar.
+ * Mesa ocupada: al avanzar vuelve a libre.
+ * {@code ocupar} se rechaza con el default de {@link MesaState}.
  */
 public final class OcupadaState implements MesaState {
 
@@ -20,11 +21,5 @@ public final class OcupadaState implements MesaState {
     @Override
     public void avanzar(MesaContext context) {
         context.setState(LibreState.INSTANCE);
-    }
-
-    @Override
-    public void ocupar(MesaContext context) {
-        throw new IllegalArgumentException(
-                "La mesa " + context.getIdMesa() + " ya está ocupada.");
     }
 }

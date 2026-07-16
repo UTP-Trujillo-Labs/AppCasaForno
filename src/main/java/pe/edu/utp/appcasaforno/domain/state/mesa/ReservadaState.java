@@ -3,7 +3,8 @@ package pe.edu.utp.appcasaforno.domain.state.mesa;
 import pe.edu.utp.appcasaforno.domain.model.EstadoMesa;
 
 /**
- * Mesa reservada: al avanzar vuelve a libre; no se puede ocupar con un pedido.
+ * Mesa reservada: al avanzar vuelve a libre.
+ * {@code ocupar} se rechaza con el default de {@link MesaState}.
  */
 public final class ReservadaState implements MesaState {
 
@@ -20,11 +21,5 @@ public final class ReservadaState implements MesaState {
     @Override
     public void avanzar(MesaContext context) {
         context.setState(LibreState.INSTANCE);
-    }
-
-    @Override
-    public void ocupar(MesaContext context) {
-        throw new IllegalArgumentException(
-                "La mesa " + context.getIdMesa() + " está reservada.");
     }
 }
