@@ -11,15 +11,27 @@ import java.util.Locale;
 public class PedidosService {
 
     private static final List<Producto> PRODUCTOS = List.of(
-            new Producto("p1", "Pepperoni y carne", 28.0, "pizzas", "/img/catalog/pizza.svg"),
-            new Producto("p2", "vegetariana", 25.0, "pizzas", "/img/catalog/pizza.svg"),
-            new Producto("p3", "Americana", 24.0, "pizzas", "/img/catalog/pizza.svg"),
-            new Producto("p4", "Margarita", 24.0, "pizzas", "/img/catalog/pizza.svg"),
-            new Producto("p5", "Pepperoni", 25.0, "pizzas", "/img/catalog/pizza.svg"),
-            new Producto("p6", "hawaina", 28.0, "pizzas", "/img/catalog/pizza.svg"),
-            new Producto("p7", "pizza cuadrada", 28.0, "pizzas", "/img/catalog/pizzac.jpg"),
-            new Producto("a1", "Alitas BBQ ×6", 18.0, "alitas", "/img/catalog/pizza.svg"),
+            new Producto("p1", "Americana", 22.0, "pizzas", "/img/catalog/Americana.jpg"),
+            new Producto("p2", "Bosque encantado", 30.0, "pizzas", "/img/catalog/Bosque encantado.jpg"),
+            new Producto("p3", "Bosque tropical", 31.0, "pizzas", "/img/catalog/Bosque tropical.webp"),
+            new Producto("p4", "Champiñones", 26.0, "pizzas", "/img/catalog/Champiñones.jpg"),
+            new Producto("p5", "Chorizo", 24.0, "pizzas", "/img/catalog/Chorizo.webp"),
+            new Producto("p6", "Continental", 27.0, "pizzas", "/img/catalog/Continental.webp"),
+            new Producto("p7", "Full carne BBQ", 34.0, "pizzas", "/img/catalog/Full carne BBQ.jpg"),
+            new Producto("p8", "Full carne picante", 35.0, "pizzas", "/img/catalog/Full carne picante.jpg"),
+            new Producto("p9", "Full carne", 33.0, "pizzas", "/img/catalog/Full carne.avif"),
+            new Producto("p10", "Hawaiana", 25.0, "pizzas", "/img/catalog/Hawaiana.jpg"),
+            new Producto("p11", "Margarita", 21.0, "pizzas", "/img/catalog/Margarita.webp"),
+            new Producto("p12", "Meat Lover", 36.0, "pizzas", "/img/catalog/Meat lover.jpeg"),
+            new Producto("p13", "Mediterránea", 29.0, "pizzas", "/img/catalog/Mediterranea.jpg"),
+            new Producto("p14", "Pepperoni y Carne", 30.0, "pizzas", "/img/catalog/Pepperoni y Carne.webp"),
+            new Producto("p15", "Pepperoni", 24.0, "pizzas", "/img/catalog/Pepperoni.webp"),
+            new Producto("p16", "Romántica", 28.0, "pizzas", "/img/catalog/Romantica.jpg"),
+            new Producto("p17", "Tocino y maíz", 26.0, "pizzas", "/img/catalog/Tocino y maiz.png"),
+            new Producto("p18", "Tocino", 25.0, "pizzas", "/img/catalog/Tocino.webp"),
+            new Producto("p19", "Vegetariana", 23.0, "pizzas", "/img/catalog/Vegetariana.webp"),
 
+            new Producto("a1", "Alitas BBQ ×6", 18.0, "alitas", "/img/catalog/pizza.svg"),
             new Producto("a2", "Alitas picantes ×6", 18.0, "alitas", "/img/catalog/pizza.svg"),
 
             new Producto("s1", "Salchipapa clásica", 12.0, "salchipapas", "/img/catalog/pizza.svg"),
@@ -81,8 +93,7 @@ public class PedidosService {
             new Producto("esp3", "Beee Feater", 26.0, "especial", "/img/catalog/beeefeater.webp"),
             new Producto("esp4", "Sangría Casa Forno", 26.0, "especial", "/img/catalog/sangriacasaformo.jpg"),
             new Producto("esp5", "Casillero Del Diablo", 26.0, "especial", "/img/catalog/casillerodeldiablo.webp"),
-            new Producto("esp6", "Double Black Label", 26.0, "especial", "/img/catalog/doubleblacklalbel.webp")
-        );
+            new Producto("esp6", "Double Black Label", 26.0, "especial", "/img/catalog/doubleblacklalbel.webp"));
 
     private final ColaPedidos colaPedidos = new ColaPedidos();
     private final HistoricoPedidos historicoPedidos = new HistoricoPedidos();
