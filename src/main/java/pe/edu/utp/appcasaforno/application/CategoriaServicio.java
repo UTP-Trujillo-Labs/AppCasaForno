@@ -11,7 +11,6 @@ public class CategoriaServicio {
             new Categoria("alitas", "Alitas"),
             new Categoria("salchipapas", "salchipapas"),
             new Categoria("bebidas", "Bebidas"),
-            new Categoria("pastas", "Pastas"),
             new Categoria("bfrias", "Bebidas frías"),
             new Categoria("cart", "Cervezas Artesanales"),
             new Categoria("cind", "Cerveza Industriales"),

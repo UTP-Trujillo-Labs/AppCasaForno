@@ -44,16 +44,16 @@ public class PedidosService {
             new Producto("a11", "Alitas Picantes ×6", 18.0, "alitas", "/img/catalog/alitasPicantes.jpg"),
             new Producto("a12", "Alitas Tocino ×6", 24.0, "alitas", "/img/catalog/alitasTocino.jpg"),
 
-            new Producto("s1", "Salchipapa clásica", 12.0, "salchipapas", "/img/catalog/pizza.svg"),
-            new Producto("s2", "Salchipapa especial", 15.0, "salchipapas", "/img/catalog/pizza.svg"),
+            new Producto("s1", "Salchi Lomo", 18.0, "salchipapas", "/img/catalog/salchiLomo.jpg"),
+            new Producto("s2", "Salchi Nuggets", 16.0, "salchipapas", "/img/catalog/salchiNuggets.jpg"),
+            new Producto("s3", "Salchipapa Clásica", 12.0, "salchipapas", "/img/catalog/salchipapaClasica.jpg"),
+            new Producto("s4", "Salchi Pollo", 17.0, "salchipapas", "/img/catalog/salchiPollo.webp"),
+            new Producto("s5", "Salchi Remix", 20.0, "salchipapas", "/img/catalog/salchiRemix.jpg"),
 
             new Producto("b1", "Coca Cola 500 ml", 4.0, "bebidas", "/img/catalog/500ml.webp"),
             new Producto("b2", "Coca Cola 1 L", 4.0, "bebidas", "/img/catalog/1L.webp"),
             new Producto("b3", "Coca Cola 1.5 L", 4.0, "bebidas", "/img/catalog/1.5L.webp"),
-            new Producto("b4", "Jugo natural", 6.0, "bebidas", "/img/catalog/pizza.svg"),
-
-            new Producto("pa1", "Spaghetti bolognesa", 22.0, "pastas", "/img/catalog/pizza.svg"),
-            new Producto("pa2", "Lasaña", 26.0, "pastas", "/img/catalog/pizza.svg"),
+            
 
             new Producto("bf1", "Limonada Cherry", 26.0, "bfrias", "/img/catalog/limonadacherry.jpg"),
             new Producto("bf2", "Limonada", 26.0, "bfrias", "/img/catalog/Limonada.webp"),
