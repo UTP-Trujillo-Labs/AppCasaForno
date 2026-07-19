@@ -53,7 +53,12 @@ public class PedidosService {
             new Producto("b1", "Coca Cola 500 ml", 4.0, "bebidas", "/img/catalog/500ml.webp"),
             new Producto("b2", "Coca Cola 1 L", 4.0, "bebidas", "/img/catalog/1L.webp"),
             new Producto("b3", "Coca Cola 1.5 L", 4.0, "bebidas", "/img/catalog/1.5L.webp"),
-            
+            new Producto("b4", "Sprite 500 ml", 4.0, "bebidas", "/img/catalog/sprite500ml.webp"),
+            new Producto("b5", "Sprite 1 L", 7.0, "bebidas", "/img/catalog/sprite1lt.jpg"),
+            new Producto("b6", "Sprite 1.5 L", 9.0, "bebidas", "/img/catalog/sprite1_5lt.png"),
+            new Producto("b7", "Inca Kola 500 ml", 4.0, "bebidas", "/img/catalog/incakola500ml.webp"),
+            new Producto("b8", "Inca Kola 1 L", 7.0, "bebidas", "/img/catalog/incakola1lt.webp"),
+            new Producto("b9", "Inca Kola 1.5 L", 9.0, "bebidas", "/img/catalog/incakola1_5lt.webp"),
 
             new Producto("bf1", "Limonada Cherry", 26.0, "bfrias", "/img/catalog/limonadacherry.jpg"),
             new Producto("bf2", "Limonada", 26.0, "bfrias", "/img/catalog/Limonada.webp"),
