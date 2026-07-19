@@ -21,6 +21,7 @@ body {
   display: flex;
   /* flex-direction: row-reverse; */
   min-height: calc(100vh - 2.5rem);
+  height: 100vh;
   /* border: 2px solid #d4cfc4; */
   background: #fff;
 }
@@ -85,6 +86,13 @@ body {
   border-right: 1px solid #d4cfc4;
   padding: 2.5rem 3rem;
   overflow-y: auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.content-area:has(.page-pedidos) {
+  padding: 0;
+  overflow: hidden;
 }
 
 .content-placeholder {
@@ -141,6 +149,44 @@ body {
   font-weight: 600;
   color: #1a1714;
   margin-bottom: 1rem;
+}
+
+.panel-full {
+  margin-bottom: 1.5rem;
+}
+
+.reporte-panel .reporte-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.reporte-panel .reporte-header h3 {
+  margin-bottom: 0;
+}
+
+.reporte-resumen {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.reporte-table-wrap {
+  overflow-x: auto;
+}
+
+.reporte-items {
+  max-width: 280px;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.reporte-monto {
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 /* ── Forms ── */
@@ -290,12 +336,19 @@ button:hover {
   flex-direction: column;
 }
 
+.ticket-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
 .ticket-header h3 {
   font-family: "Segoe UI", Arial, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
   color: #1a1714;
-  margin-bottom: 0.15rem;
 }
 
 .ticket-mesa {
@@ -303,6 +356,37 @@ button:hover {
   font-size: 0.95rem;
   font-weight: 600;
   color: #333;
+}
+
+.estado-pedido {
+  display: inline-block;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.estado-pedido-pendiente {
+  background: #fff3cd;
+  color: #8a6d1b;
+  border: 1px solid #e0c35a;
+}
+
+.estado-pedido-completado {
+  background: #d4edda;
+  color: #1e6b36;
+  border: 1px solid #7cbc8a;
+}
+
+.estado-pedido-pagado {
+  background: #dce9f7;
+  color: #1a4f7a;
+  border: 1px solid #7aa8cf;
 }
 
 .ticket-divider {
@@ -374,8 +458,13 @@ button:hover {
   transition: background 0.2s;
 }
 
-.btn-despachar:hover {
+.btn-despachar:hover:not(:disabled) {
   background: #4cae4c;
+}
+
+.btn-despachar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .ticket-grid-empty {
@@ -388,16 +477,21 @@ button:hover {
 /* ── Toma de pedidos (catálogo) ── */
 .page-pedidos {
   background: #ececec;
-  margin: -2.5rem -3rem;
   padding: 1.75rem 2rem;
-  min-height: calc(100% + 5rem);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .pedidos-layout {
   display: flex;
   gap: 1.25rem;
   align-items: stretch;
-  min-height: calc(100vh - 8rem);
+  flex: 1;
+  min-height: 0;
+  height: 100%;
 }
 
 .catalogo-panel {
@@ -409,6 +503,8 @@ button:hover {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .pedido-panel {
@@ -421,6 +517,8 @@ button:hover {
   flex-direction: column;
   min-width: 260px;
   max-width: 340px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .catalogo-header h2 {
@@ -429,6 +527,10 @@ button:hover {
   font-weight: 700;
   color: #1a1714;
   margin-bottom: 0.85rem;
+}
+
+.catalogo-header {
+  flex-shrink: 0;
 }
 
 .catalogo-icon {
@@ -445,6 +547,7 @@ button:hover {
   font-size: 0.9rem;
   color: #333;
   margin-bottom: 0.85rem;
+  flex-shrink: 0;
 }
 
 .catalogo-buscar::placeholder {
@@ -453,9 +556,34 @@ button:hover {
 
 .catalogo-categorias {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.45rem;
   margin-bottom: 1rem;
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.35rem;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.catalogo-categorias::-webkit-scrollbar {
+  height: 6px;
+}
+
+.catalogo-categorias::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+}
+
+.catalogo-categorias::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+.catalogo-categorias::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .catalogo-cat {
@@ -469,6 +597,8 @@ button:hover {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .catalogo-cat:hover {
@@ -481,36 +611,42 @@ button:hover {
 }
 
 .catalogo-grid-wrap {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   margin-bottom: 0.75rem;
-  padding-right: 0.25rem;
+  padding-right: 0.35rem;
+  overscroll-behavior: contain;
 }
 
 .catalogo-grid-wrap::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+.catalogo-grid-wrap::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
 }
 
 .catalogo-grid-wrap::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 999px;
+}
+
+.catalogo-grid-wrap::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .catalogo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.85rem;
-}
-
-.catalogo-vacio {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: #888;
-  font-style: italic;
-  padding: 2rem 0;
+  align-content: start;
 }
 
 .producto-card {
+  min-width: 0;
   background: #fff;
   border-radius: 10px;
   padding: 0.65rem;
@@ -572,10 +708,13 @@ button:hover {
   color: #1a1714;
   padding-top: 0.5rem;
   border-top: 1px solid #e0d4a8;
+  flex-shrink: 0;
 }
 
 .pedido-info {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .pedido-meta {
@@ -620,6 +759,41 @@ button:hover {
 .pedido-items-empty {
   color: #888;
   font-style: italic;
+}
+
+.pedido-nota-label {
+  display: block;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a1714;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.pedido-nota {
+  width: 100%;
+  min-height: 4.5rem;
+  resize: vertical;
+  background: #fff8e0;
+  border: 1px solid #c8b88a;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  color: #1a1714;
+  line-height: 1.4;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.pedido-nota::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.pedido-nota:focus {
+  border-color: #e8a020;
 }
 
 .pedido-acciones {
@@ -681,6 +855,9 @@ button:hover {
   cursor: pointer;
   transition: transform 0.15s, box-shadow 0.15s;
   user-select: none;
+  font: inherit;
+  padding: 0;
+  width: 100%;
 }
 
 .mesa:hover {
@@ -718,6 +895,186 @@ button:hover {
   background: #fff8e1;
   border-color: #ffa726;
   color: #e65100;
+}
+
+/* ── Modal compartido ── */
+.app-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(26, 23, 20, 0.45);
+}
+
+.app-modal[hidden] {
+  display: none;
+}
+
+.app-modal-dialog {
+  width: min(420px, 100%);
+  max-height: min(80vh, 640px);
+  display: flex;
+  flex-direction: column;
+  background: #fffdf8;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.app-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid #e8e4dc;
+}
+
+.app-modal-header h3 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1714;
+}
+
+.app-modal-cerrar {
+  border: none;
+  background: transparent;
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+}
+
+.app-modal-cerrar:hover {
+  color: #1a1714;
+}
+
+.app-modal-contenido {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.15rem;
+}
+
+.app-modal-vacio {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.app-modal-hint {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.app-modal-ticket {
+  background: #fff;
+  border: 1px solid #e8e4dc;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.app-modal-ticket:last-child {
+  margin-bottom: 0;
+}
+
+.app-modal-ticket-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.65rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.9rem;
+  color: #1a1714;
+}
+
+.app-modal-ticket-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.app-modal-items {
+  list-style: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #1a1714;
+}
+
+.app-modal-nota {
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed #ddd;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+}
+
+.app-modal-total {
+  margin-top: 0.65rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1714;
+}
+
+.app-modal-acciones {
+  display: flex;
+  gap: 0.65rem;
+  padding: 1rem 1.15rem;
+  border-top: 1px solid #e8e4dc;
+}
+
+.btn-modal-secundario,
+.btn-modal-primario {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.btn-modal-secundario {
+  background: #ebe6dc;
+  color: #1a1714;
+}
+
+.btn-modal-secundario:hover {
+  background: #ddd6c8;
+}
+
+.btn-modal-primario {
+  background: #4c7c3c;
+  color: #fff;
+}
+
+.btn-modal-primario:hover:not(:disabled) {
+  background: #3f6a31;
+}
+
+.btn-modal-primario:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-modal-primario.btn-modal-acento {
+  background: #f0a243;
+  color: #1a1714;
+}
+
+.btn-modal-primario.btn-modal-acento:hover:not(:disabled) {
+  background: #e8942a;
 }
 
 /* ── Data table ── */
@@ -851,17 +1208,33 @@ body.contacto-page {
   }
 
   .page-pedidos {
-    margin: -1.5rem -1.5rem;
     padding: 1rem;
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .content-area:has(.page-pedidos) {
+    overflow-y: auto;
   }
 
   .pedidos-layout {
     flex-direction: column;
-    min-height: auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  .catalogo-panel {
+    max-height: 65vh;
+  }
+
+  .catalogo-grid-wrap {
+    max-height: 45vh;
   }
 
   .pedido-panel {
     max-width: 100%;
+    overflow: visible;
   }
 
   .catalogo-grid {

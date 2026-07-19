@@ -1,4 +1,4 @@
-package pe.edu.utp.appcasaforno.presentation.handler.pedidos;
+package pe.edu.utp.appcasaforno.presentation.handler.cocina;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

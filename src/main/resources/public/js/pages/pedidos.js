@@ -10,6 +10,7 @@ function initPedidos() {
     mesasDisponibles: [],
   };
 
+  bindPedidoCreadoModal();
   bindPedidosEvents(state);
   cargarPedidos(state);
 }
@@ -64,7 +65,7 @@ function renderMesasSelect(state) {
     '<option value="">Selecciona una mesa</option>',
     ...state.mesasDisponibles.map(
       (mesa) =>
-        `<option value="${String(mesa.numero).padStart(2, "0")}">Mesa ${mesa.numero}</option>`
+        `<option value="${mesa.numero}">Mesa ${mesa.numero}</option>`
     ),
   ].join("");
 }
@@ -129,7 +130,7 @@ function renderProductos(state) {
       <article class="producto-card">
         <img src="${p.imagen}" alt="${p.nombre}" class="producto-img" />
         <h3 class="producto-nombre">${p.nombre}</h3>
-        <p class="producto-precio">$ ${p.precio.toFixed(2)}</p>
+        <p class="producto-precio">${App.formatMoney(p.precio)}</p>
         <button type="button" class="btn-agregar" data-producto-id="${p.id}">+ Agregar</button>
       </article>`
     )
@@ -163,7 +164,7 @@ function renderCarrito(state) {
 
   if (state.carrito.length === 0) {
     lista.innerHTML = '<li class="pedido-items-empty">Sin productos en el pedido.</li>';
-    totalEl.textContent = "$ 0.00";
+    totalEl.textContent = App.formatMoney(0);
     return;
   }
 
@@ -172,7 +173,7 @@ function renderCarrito(state) {
     .join("");
 
   const total = state.carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-  totalEl.textContent = `$ ${total.toFixed(2)}`;
+  totalEl.textContent = App.formatMoney(total);
 }
 
 async function enviarACocina(state) {
@@ -183,6 +184,7 @@ async function enviarACocina(state) {
 
   const cliente = document.getElementById("pedido-cliente")?.value.trim() || "—";
   const mesa = document.getElementById("pedido-mesa")?.value.trim();
+  const nota = document.getElementById("pedido-nota")?.value.trim() || "";
 
   if (!mesa) {
     alert("Selecciona una mesa disponible.");
@@ -192,6 +194,7 @@ async function enviarACocina(state) {
   const payload = {
     cliente,
     mesa,
+    nota,
     items: state.carrito.map((item) => ({
       productoId: item.id,
       cantidad: item.cantidad,
@@ -200,7 +203,7 @@ async function enviarACocina(state) {
 
   try {
     // Ir al metodo JAVA para enviar el pedido a cocina
-    const response = await fetch("/api/pedidos/cocina", {
+    const response = await fetch("/api/cocina/", {
       method: "POST",
       headers: { "Content-Type": "application/json" }, // Indicar el tipo de dato que se envia al JAVA
       body: JSON.stringify(payload), // Convertir el objeto a JSON
@@ -217,15 +220,61 @@ async function enviarACocina(state) {
       return;
     }
 
-    alert(`Pedido enviado a cocina\nTicket #${result.ticket}\nCliente: ${result.cliente}\nMesa: ${result.mesa}`);
+    mostrarPedidoCreadoModal({ ...result, nota });
     anularPedido(state);
+    await fetchMesasDisponibles(state);
+    renderMesasSelect(state);
   } catch (err) {
     console.error(err);
     alert("Error al enviar el pedido a cocina.");
   }
 }
 
+function mostrarPedidoCreadoModal(pedido) {
+  const modal = document.getElementById("pedido-creado-modal");
+  const titulo = document.getElementById("pedido-creado-titulo");
+  const contenido = document.getElementById("pedido-creado-contenido");
+  if (!modal || !titulo || !contenido) return;
+
+  titulo.textContent = `Pedido enviado — Ticket #${pedido.ticket}`;
+  contenido.innerHTML = `
+    <article class="app-modal-ticket">
+      <header class="app-modal-ticket-header">
+        <strong>Ticket #${pedido.ticket}</strong>
+        <span>Cliente: ${pedido.cliente || "—"}</span>
+        <span>Mesa: ${pedido.mesa || "—"}</span>
+      </header>
+      <ul class="app-modal-items">
+        ${(pedido.items || []).map((item) => `<li>${item}</li>`).join("")}
+      </ul>
+      ${pedido.nota ? `<p class="app-modal-nota">Nota: ${pedido.nota}</p>` : ""}
+      <p class="app-modal-total">Total: ${App.formatMoney(pedido.total)}</p>
+    </article>
+    <p class="app-modal-hint">${pedido.message || "El pedido fue enviado a cocina."}</p>`;
+
+  modal.hidden = false;
+}
+
+function cerrarPedidoCreadoModal() {
+  const modal = document.getElementById("pedido-creado-modal");
+  if (modal) modal.hidden = true;
+}
+
+function bindPedidoCreadoModal() {
+  const modal = document.getElementById("pedido-creado-modal");
+  if (!modal || modal.dataset.bound === "1") return;
+  modal.dataset.bound = "1";
+
+  document.getElementById("pedido-creado-cerrar")?.addEventListener("click", cerrarPedidoCreadoModal);
+  document.getElementById("pedido-creado-aceptar")?.addEventListener("click", cerrarPedidoCreadoModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) cerrarPedidoCreadoModal();
+  });
+}
+
 function anularPedido(state) {
   state.carrito.length = 0;
+  const notaEl = document.getElementById("pedido-nota");
+  if (notaEl) notaEl.value = "";
   renderCarrito(state);
 }

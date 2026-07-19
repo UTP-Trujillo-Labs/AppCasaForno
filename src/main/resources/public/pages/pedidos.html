@@ -19,7 +19,7 @@
       </div>
 
       <footer class="catalogo-total">
-        Total: <span id="catalogo-total">$ 0.00</span>
+        Total: <span id="catalogo-total">S/. 0.00</span>
       </footer>
     </aside>
 
@@ -27,7 +27,12 @@
       <div class="pedido-info">
         <p class="pedido-meta">
           Cliente:
-          <input type="text" id="pedido-cliente" class="pedido-meta-input" value="Juan" />
+          <input
+            type="text"
+            id="pedido-cliente"
+            class="pedido-meta-input"
+            value="Juan"
+          />
         </p>
         <p class="pedido-meta">
           Mesa:
@@ -41,6 +46,16 @@
         </ul>
       </div>
 
+      <label class="pedido-nota-label" for="pedido-nota"
+        >Nota para cocina</label
+      >
+      <textarea
+        id="pedido-nota"
+        class="pedido-nota"
+        rows="3"
+        placeholder="Ej. sin cebolla, poco picante, etc."
+      ></textarea>
+
       <footer class="pedido-acciones">
         <button type="button" id="btn-enviar-cocina" class="btn-enviar-cocina">
           Enviar a Cocina
@@ -50,5 +65,20 @@
         </button>
       </footer>
     </aside>
+  </div>
+
+  <div id="pedido-creado-modal" class="app-modal" hidden>
+    <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="pedido-creado-titulo">
+      <header class="app-modal-header">
+        <h3 id="pedido-creado-titulo">Pedido enviado a cocina</h3>
+        <button type="button" id="pedido-creado-cerrar" class="app-modal-cerrar" aria-label="Cerrar">×</button>
+      </header>
+      <div id="pedido-creado-contenido" class="app-modal-contenido"></div>
+      <footer class="app-modal-acciones">
+        <button type="button" id="pedido-creado-aceptar" class="btn-modal-primario btn-modal-acento">
+          Aceptar
+        </button>
+      </footer>
+    </div>
   </div>
 </section>

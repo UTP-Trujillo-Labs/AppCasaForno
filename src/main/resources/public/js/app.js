@@ -2,8 +2,26 @@ const App = {
   DEFAULT_PAGE: "pedidos",
   VALID_PAGES: ["pedidos", "cocina", "mesas", "inventario", "delivery"],
 
+  ESTADOS_MESA: ["libre", "ocupada", "reservada"],
+  ESTADO_MESA_LABELS: {
+    libre: "Libre",
+    ocupada: "Ocupada",
+    reservada: "Reservada",
+  },
+  ESTADO_PEDIDO_LABELS: {
+    pendiente: "Pendiente",
+    completado: "Completado",
+    pagado: "Pagado",
+  },
+
   pages: {},
   loadedScripts: new Set(),
+
+  formatMoney(amount) {
+    const value = Number(amount);
+    const safe = Number.isFinite(value) ? value : 0;
+    return `S/. ${safe.toFixed(2)}`;
+  },
 
   registerPage(name, initFn) {
     this.pages[name] = initFn;

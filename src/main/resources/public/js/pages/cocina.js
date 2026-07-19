@@ -9,7 +9,7 @@ async function cargarPedidosPendientes() {
   if (!grid) return;
 
   try {
-    const response = await fetch("/api/pedidos/pendientes");
+    const response = await fetch("/api/cocina/");
     if (!response.ok) throw new Error("Error al obtener pedidos pendientes");
 
     const pedidos = await response.json();
@@ -38,22 +38,27 @@ function renderTickets(pedidos) {
 
 function crearTicketHtml(pedido) {
   const items = pedido.items.map((item) => `<li>${item}</li>`).join("");
+  const nota = (pedido.nota || "").trim();
+  const notaHtml = nota
+    ? `<div class="ticket-nota"><p class="ticket-nota-texto">${nota}</p></div>`
+    : `<div class="ticket-nota" hidden><p class="ticket-nota-texto"></p></div>`;
+  const estado = pedido.estado || "pendiente";
 
   return `
     <article class="ticket" data-ticket="${pedido.ticket}">
       <header class="ticket-header">
-        <h3>Ticket #${pedido.ticket}</h3>
+        <div class="ticket-header-top">
+          <h3>Ticket #${pedido.ticket}</h3>
+          <span class="estado-pedido estado-pedido-${estado}">${App.ESTADO_PEDIDO_LABELS[estado] || estado}</span>
+        </div>
         <p class="ticket-mesa">Mesa: ${pedido.mesa}</p>
       </header>
       <hr class="ticket-divider" />
       <ul class="ticket-items">
         ${items}
       </ul>
-      <div class="ticket-nota" hidden>
-        <p class="ticket-nota-texto"></p>
-      </div>
+      ${notaHtml}
       <footer class="ticket-footer">
-        <button type="button" class="btn-nota">+ Añadir nota para cocina</button>
         <button type="button" class="btn-despachar">✔ Despachar</button>
       </footer>
     </article>
@@ -65,33 +70,34 @@ function bindTicketEvents() {
   if (!grid) return;
 
   grid.querySelectorAll(".ticket").forEach((ticket) => {
-    ticket.querySelector(".btn-nota")?.addEventListener("click", () => addNota(ticket));
     ticket.querySelector(".btn-despachar")?.addEventListener("click", () => despacharTicket(ticket));
   });
 }
 
-function addNota(ticket) {
-  const nota = prompt("Nota para cocina:");
-  if (nota === null) return;
+async function despacharTicket(ticketEl) {
+  const numeroTicket = Number(ticketEl.dataset.ticket);
+  const btn = ticketEl.querySelector(".btn-despachar");
+  if (!numeroTicket) return;
 
-  const notaBlock = ticket.querySelector(".ticket-nota");
-  const notaTexto = ticket.querySelector(".ticket-nota-texto");
-  if (!notaBlock || !notaTexto) return;
+  if (btn) btn.disabled = true;
 
-  if (nota.trim() === "") {
-    notaBlock.hidden = true;
-    notaTexto.textContent = "";
-    return;
+  try {
+    const response = await fetch(`/api/cocina/${numeroTicket}/despachar`, { method: "POST" });
+    const result = await response.json();
+    if (!response.ok) {
+      alert(result.error || "No se pudo despachar el pedido.");
+      if (btn) btn.disabled = false;
+      return;
+    }
+
+    ticketEl.remove();
+    updatePendientesCount();
+    showEmptyStateIfNeeded();
+  } catch (err) {
+    console.error(err);
+    alert("Error al despachar el pedido.");
+    if (btn) btn.disabled = false;
   }
-
-  notaTexto.textContent = nota.trim();
-  notaBlock.hidden = false;
-}
-
-function despacharTicket(ticket) {
-  ticket.remove();
-  updatePendientesCount();
-  showEmptyStateIfNeeded();
 }
 
 function updatePendientesCount() {

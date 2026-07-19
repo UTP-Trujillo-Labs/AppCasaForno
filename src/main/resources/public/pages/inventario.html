@@ -1,8 +1,37 @@
 <section class="page">
   <header class="page-header">
     <h2>Inventario y mermas</h2>
-    <p>Control de stock y registro de pérdidas.</p>
+    <p>Control de stock, mermas y reporte de pedidos completados.</p>
   </header>
+
+  <div class="panel panel-full reporte-panel">
+    <div class="reporte-header">
+      <h3>Reporte de pedidos completados</h3>
+      <p class="reporte-resumen">
+        Total histórico: <strong id="reporte-total">S/. 0.00</strong>
+        · Pedidos: <strong id="reporte-cantidad">0</strong>
+      </p>
+    </div>
+    <div class="reporte-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Mesa</th>
+            <th>Cliente</th>
+            <th>Ítems</th>
+            <th>Estado</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="reporte-pedidos">
+          <tr>
+            <td colspan="6" class="content-loading">Cargando histórico…</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <div class="page-grid">
     <div class="panel">
