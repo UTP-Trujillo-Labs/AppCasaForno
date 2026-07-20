@@ -1,6 +1,6 @@
 const App = {
   DEFAULT_PAGE: "pedidos",
-  VALID_PAGES: ["pedidos", "cocina", "mesas", "inventario", "delivery"],
+  VALID_PAGES: ["pedidos", "cocina", "mesas", "inventario"],
 
   ESTADOS_MESA: ["libre", "ocupada", "reservada"],
   ESTADO_MESA_LABELS: {

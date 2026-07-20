@@ -26,17 +26,25 @@ También puedes ejecutar la clase `App` desde tu IDE. El servidor queda disponib
 ```
 src/main/java/pe/edu/utp/appcasaforno/
 ├── App.java                          # Punto de entrada
-├── domain/model/                     # Entidades y DTOs del dominio
+├── domain/
+│   ├── model/                        # Entidades y DTOs del dominio
+│   ├── api/                          # ServletRegistration
+│   └── state/mesa/                   # Patrón State (estados de mesa)
 ├── application/                      # Lógica de negocio (servicios)
 ├── infraestructure/
 │   ├── persistence/                  # Almacenamiento en memoria
-│   ├── server/                       # Tomcat embebido y fachada de arranque
-│   ├── web/                          # ApiHandler, ServletRegistration, ServletRegistry
+│   ├── server/                       # Tomcat, ServerFacade, ServletRegistry
+│   ├── web/                          # ApiServlet, ApiHandler
 │   └── util/                         # Utilidades (JSON, helpers)
 └── presentation/
     ├── factory/ApplicationFactory.java
-    ├── handler/                      # Estrategias por ruta de la API
-    └── servlet/                      # Servlets REST (ApiServlet)
+    ├── handler/                      # Estrategias por ruta (por módulo)
+    │   ├── categorias/
+    │   ├── cocina/
+    │   ├── mesas/
+    │   ├── pedidos/
+    │   └── productos/
+    └── servlet/                      # Servlets REST (extienden ApiServlet)
 
 src/main/resources/public/
 ├── index.html                        # Shell de la aplicación (SPA)
@@ -54,8 +62,8 @@ El proyecto sigue una organización en capas inspirada en arquitectura hexagonal
 
 | Capa | Paquete | Responsabilidad |
 |------|---------|-----------------|
-| **Dominio** | `domain.model` | Modelos de datos: `Producto`, `Mesa`, `TicketCocina`, DTOs de request/response |
-| **Aplicación** | `application` | Casos de uso: `PedidosService`, `MesasServicio`, `CategoriaServicio` |
+| **Dominio** | `domain.model`, `domain.state`, `domain.api` | Modelos, estados de mesa y descriptores de servlet |
+| **Aplicación** | `application` | Casos de uso: `PedidosService`, `CocinaServicio`, `MesasServicio`, `ProductService`, `CategoriaServicio` |
 | **Infraestructura** | `infraestructure` | Servidor Tomcat, registro web, persistencia en memoria y utilidades |
 | **Presentación** | `presentation` | Servlets REST, handlers y factory de composición |
 
@@ -66,8 +74,9 @@ Cliente (navegador)
     → Tomcat embebido (puerto 8080)
         → Archivos estáticos (/css, /js, /pages, index.html)
         → Servlets API (/api/*)
-            → Servicio de aplicación
-                → Persistencia en memoria
+            → ApiHandler (Strategy)
+                → Servicio de aplicación
+                    → Persistencia en memoria
             → Respuesta JSON (Jackson)
 ```
 
@@ -77,49 +86,55 @@ Cliente (navegador)
 
 ### Toma de pedidos (`#pedidos`)
 
-- Consulta categorías y catálogo de productos con filtros.
-- Muestra mesas disponibles.
-- Envía pedidos a cocina generando un ticket.
+- Consulta categorías (`/api/categorias`) y catálogo de productos (`/api/productos`) con filtros.
+- Muestra mesas disponibles desde la API.
+- Envía pedidos a cocina (`POST /api/cocina/`) generando un ticket y descontando stock.
 
 ### Monitor de cocina (`#cocina`)
 
-- Lista los pedidos pendientes en tiempo real (polling cada pocos segundos).
+- Lista los pedidos pendientes (`GET /api/cocina/`) con polling.
+- Permite despachar un ticket (`POST /api/cocina/{ticket}/despachar`): PENDIENTE → COMPLETADO.
 
 ### Control de mesas (`#mesas`)
 
-- Vista del salón con estados visuales (libre, ocupada, reservada).
-- La API de mesas está disponible; la pantalla actual opera de forma local en el navegador.
+- Vista del salón con estados visuales (libre, ocupada, reservada) desde la API.
+- Avance de estado (`POST /api/mesas/{numero}`) según el patrón State (sin enviar el estado destino).
+- Consulta de pedidos por mesa y cobro (`POST /api/mesas/{numero}/pagar`).
 
-### Inventario y delivery
+### Inventario (`#inventario`)
 
-- Pantallas de maquetación incluidas en la interfaz; sin backend implementado aún.
+- Lista productos y stock desde `/api/productos` y `/api/categorias`.
+- Muestra reporte de pedidos completados desde `/api/pedidos/completados`.
 
 ## API REST
 
 Base URL: `http://localhost:8080/api`
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| `GET` | `/categorias/` | Lista todas las categorías de productos |
-| `GET` | `/pedidos/productos` | Lista productos. Query params opcionales: `categoria`, `busqueda` |
-| `GET` | `/pedidos/pendientes` | Tickets pendientes en cocina |
-| `GET` | `/pedidos/completados` | Tickets completados (histórico) |
-| `GET` | `/pedidos/cocina` | Alias de tickets pendientes |
-| `POST` | `/pedidos/cocina` | Envía un pedido a cocina. Body JSON: `EnvioCocinaRequest` |
-| `GET` | `/mesas/` | Resumen y listado de mesas |
-| `PUT` | `/mesas/{numero}` | Actualiza el estado de una mesa. Body JSON: `{ "estado": "LIBRE" \| "OCUPADO" \| "RESERVADO" }` |
+| Método | Ruta | Servlet | Descripción |
+|--------|------|---------|-------------|
+| `GET` | `/categorias/` | `CategoriasServlet` | Lista todas las categorías |
+| `GET` | `/productos/` | `ProductosServlet` | Lista productos. Query params opcionales: `categoria`, `busqueda` |
+| `GET` | `/pedidos/completados` | `PedidosServlet` | Tickets en histórico (completados / pagados) |
+| `GET` | `/pedidos/mesa/{numero}` | `PedidosServlet` | Pedidos pendientes y completados de una mesa |
+| `GET` | `/cocina/` | `CocinaServlet` | Tickets pendientes en cocina |
+| `POST` | `/cocina/` | `CocinaServlet` | Envía un pedido a cocina. Body: `EnvioCocinaRequest` |
+| `POST` | `/cocina/{ticket}/despachar` | `CocinaServlet` | Despacha un ticket (PENDIENTE → COMPLETADO) |
+| `GET` | `/mesas/` | `MesasServlet` | Resumen y listado de mesas |
+| `POST` | `/mesas/{numero}` | `MesasServlet` | Avanza el estado de la mesa (State) |
+| `POST` | `/mesas/{numero}/pagar` | `MesasServlet` | Cobra la mesa si no hay pendientes y libera |
 
-Todas las respuestas de la API son JSON. Los errores devuelven un objeto `ErrorResponse` con el mensaje descriptivo.
+Todas las respuestas de la API son JSON. Los errores devuelven un objeto `ErrorResponse` con el mensaje descriptivo. Solo se exponen `GET` y `POST` (más `OPTIONS` para CORS).
 
 ### Ejemplo: enviar pedido a cocina
 
 ```http
-POST /api/pedidos/cocina
+POST /api/cocina/
 Content-Type: application/json
 
 {
   "cliente": "Juan Pérez",
-  "mesa": 3,
+  "mesa": "3",
+  "nota": "Sin cebolla",
   "items": [
     { "productoId": "p1", "cantidad": 2 },
     { "productoId": "b1", "cantidad": 1 }
@@ -139,7 +154,7 @@ Content-Type: application/json
 
 ## Patrones de diseño
 
-La capa de presentación aplica cuatro patrones GoF sin frameworks ni anotaciones.
+La capa de presentación aplica patrones GoF sin frameworks ni anotaciones. En dominio se usa State para las mesas.
 
 Referencias: [Refactoring.Guru — Design Patterns](https://refactoring.guru/design-patterns)
 
@@ -154,16 +169,15 @@ Define el esqueleto de un algoritmo en una clase base, delegando algunos pasos a
 - Preparar cabeceras JSON y CORS
 - Responder a `OPTIONS`
 - Capturar `IllegalArgumentException` y devolver HTTP 400
-- Normalizar el path de la petición
+- Normalizar el path y resolver handlers (incluyendo rutas con parámetros: `/{numero}`, `/{ticket}/despachar`, etc.)
 
-Cada servlet concreto (`PedidosServlet`, `MesasServlet`, `CategoriasServlet`) configura los mapas de handlers y delega el flujo a la clase base.
+Cada servlet concreto (`PedidosServlet`, `CocinaServlet`, `ProductosServlet`, `MesasServlet`, `CategoriasServlet`) pasa los mapas de handlers al constructor y delega el flujo a la clase base.
 
 ```
-ApiServlet (abstracta)
-├── doGet()      → prepareJsonResponse + try/catch + handleGet()
-├── doPost()     → prepareJsonResponse + try/catch + handlePost()
-├── doOptions()  → CORS (implementación única)
-└── handleGet()  → abstracto (cada servlet lo define)
+ApiServlet
+├── doGet() / doPost()  → dispatch(handlers)
+├── doOptions()         → CORS (implementación única)
+└── dispatch()          → prepareJson + resolveHandler + handle / 404 / 400
 ```
 
 **Beneficio:** Elimina la duplicación de boilerplate HTTP sin cambiar la estructura general del proyecto.
@@ -184,10 +198,10 @@ interface ApiHandler {
 }
 ```
 
-Cada ruta (`/productos`, `/cocina`, `/pendientes`, etc.) se implementa como una clase `ApiHandler` independiente. El servlet consulta el mapa por path y delega:
+Cada endpoint se implementa como una clase `ApiHandler` independiente. El servlet consulta el mapa por path y delega:
 
 ```java
-ApiHandler handler = rutas.get(path);
+ApiHandler handler = resolveHandler(handlers, path);
 if (handler == null) {
   // 404
 } else {
@@ -240,6 +254,10 @@ public List<ServletRegistration> crearRegistrosServlets() {
     return List.of(
         new ServletRegistration("pedidosServlet", "/api/pedidos/*",
                 new PedidosServlet(pedidosService)),
+        new ServletRegistration("cocinaServlet", "/api/cocina/*",
+                new CocinaServlet(cocinaServicio)),
+        new ServletRegistration("productosServlet", "/api/productos/*",
+                new ProductosServlet(productService)),
         new ServletRegistration("categoriasServlet", "/api/categorias/*",
                 new CategoriasServlet(categoriaServicio)),
         new ServletRegistration("mesasServlet", "/api/mesas/*",
@@ -255,9 +273,21 @@ La factory actúa como **composition root**: un único lugar donde se ensambla e
 
 ---
 
+### Patrón 5: State (Comportamiento)
+
+**Referencia:** [State](https://refactoring.guru/design-patterns/state)
+
+Permite que un objeto altere su comportamiento cuando cambia su estado interno.
+
+**Implementación:** En `domain/state/mesa/`, cada estado concreto (`LibreState`, `ReservadaState`, `OcupadaState`) define las transiciones válidas. `MesaContext` delega `avanzar()` y `ocupar()` al estado actual. `ActualizarMesaHandler` no recibe el estado destino: el backend aplica la transición.
+
+**Beneficio:** Las reglas de mesa viven en el dominio, no en el servlet ni en el frontend.
+
+---
+
 ### Combinación de patrones
 
-Los cuatro patrones se complementan en capas distintas:
+Los patrones se complementan en capas distintas:
 
 ```
 App
@@ -270,6 +300,7 @@ App
                      └── Template Method (ApiServlet)
                           └── Strategy (Map<String, ApiHandler>)
                                └── Servicios de aplicación
+                                    └── State (mesas) / persistencia
 ```
 
 | Patrón | Capa | Rol |
@@ -278,26 +309,29 @@ App
 | **Factory Method** | Composición | Crear `ServletRegistration` con servicios inyectados |
 | **Template Method** | Servlet base | Flujo HTTP común (JSON, CORS, errores) |
 | **Strategy** | Routing | Un handler por ruta, sin `switch` |
+| **State** | Dominio (mesas) | Transiciones de estado de mesa |
 
-### Handlers implementados
+### Servlets y handlers
 
-| Servlet | Handler | Ruta | Método |
-|---------|---------|------|--------|
-| `CategoriasServlet` | `ListarCategoriasHandler` | `/` | GET |
-| `PedidosServlet` | `ListarProductosHandler` | `/productos` | GET |
-| `PedidosServlet` | `ListarPedidosPendientesHandler` | `/pendientes` | GET |
-| `PedidosServlet` | `ListarPedidosCompletadosHandler` | `/completados` | GET |
-| `PedidosServlet` | `ListarCocinaHandler` | `/cocina` | GET |
-| `PedidosServlet` | `EnviarCocinaHandler` | `/cocina` | POST |
-| `MesasServlet` | `ListarMesasHandler` | `/` | GET |
-| `MesasServlet` | `ActualizarMesaHandler` | `/{numero}` | PUT |
+| Servlet | Mapping | Handler | Ruta | Método |
+|---------|---------|---------|------|--------|
+| `CategoriasServlet` | `/api/categorias/*` | `ListarCategoriasHandler` | `/` | GET |
+| `ProductosServlet` | `/api/productos/*` | `ListarProductosHandler` | `/` | GET |
+| `PedidosServlet` | `/api/pedidos/*` | `ListarPedidosCompletadosHandler` | `/completados` | GET |
+| `PedidosServlet` | `/api/pedidos/*` | `ListarPedidosPorMesaHandler` | `/mesa/{numero}` | GET |
+| `CocinaServlet` | `/api/cocina/*` | `ListarCocinaHandler` | `/` | GET |
+| `CocinaServlet` | `/api/cocina/*` | `EnviarCocinaHandler` | `/` | POST |
+| `CocinaServlet` | `/api/cocina/*` | `DespacharPedidoHandler` | `/{ticket}/despachar` | POST |
+| `MesasServlet` | `/api/mesas/*` | `ListarMesasHandler` | `/` | GET |
+| `MesasServlet` | `/api/mesas/*` | `ActualizarMesaHandler` | `/{numero}` | POST |
+| `MesasServlet` | `/api/mesas/*` | `CobrarMesaHandler` | `/{numero}/pagar` | POST |
 
 ### Patrones descartados para este proyecto
 
 | Patrón | Motivo de descarte |
 |--------|-------------------|
 | Singleton | Oculta dependencias; la factory con instancias explícitas es preferible |
-| Abstract Factory | Sobredimensionado para tres servicios |
+| Abstract Factory | Sobredimensionado para el grafo actual de servicios |
 | Decorator | No justifica capas adicionales para CORS/JSON |
 | Observer | No hay flujo de eventos en la capa HTTP |
 | Chain of Responsibility | Excesivo para ~10 rutas REST |
