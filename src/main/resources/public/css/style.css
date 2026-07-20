@@ -268,6 +268,34 @@ body {
   white-space: nowrap;
 }
 
+.inventario-semaforo-celda {
+  width: 4.5rem;
+}
+
+.inventario-semaforo {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.inventario-semaforo--red {
+  background: #e74c3c;
+}
+
+.inventario-semaforo--yellow {
+  background: #f1c40f;
+}
+
+.inventario-semaforo--green {
+  background: #27ae60;
+}
+
+.inventario-semaforo-vacio {
+  color: #999;
+}
+
 .reporte-items {
   max-width: 280px;
   font-size: 0.95rem;

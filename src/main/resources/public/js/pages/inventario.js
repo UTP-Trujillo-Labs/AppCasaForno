@@ -5,6 +5,11 @@ function initInventario() {
   cargarInventario();
 }
 
+function formatoStock(producto) {
+  if (producto.stock == null || !producto.unidad) return "N/A";
+  return `${producto.stock} ${producto.unidad}`;
+}
+
 async function cargarInventario() {
   const tbody = document.getElementById("inventario-insumos");
   if (!tbody) return;
@@ -25,13 +30,21 @@ async function cargarInventario() {
   } catch (err) {
     console.error(err);
     tbody.innerHTML =
-      '<tr><td colspan="4" class="content-error">No se pudo cargar el inventario.</td></tr>';
+      '<tr><td colspan="5" class="content-error">No se pudo cargar el inventario.</td></tr>';
   }
 }
 
-function formatoStock(producto) {
-  if (producto.stock == null || !producto.unidad) return "N/A";
-  return `${producto.stock} ${producto.unidad}`;
+function renderSemaforo(estado) {
+  if (!estado) return '<span class="inventario-semaforo-vacio">—</span>';
+
+  const titulos = {
+    red: "Sin stock",
+    yellow: "Stock bajo",
+    green: "Stock óptimo",
+  };
+
+  const titulo = titulos[estado] || estado;
+  return `<span class="inventario-semaforo inventario-semaforo--${estado}" title="${titulo}" aria-label="${titulo}"></span>`;
 }
 
 function renderInventario(productos, labels) {
@@ -40,7 +53,7 @@ function renderInventario(productos, labels) {
 
   if (!productos.length) {
     tbody.innerHTML =
-      '<tr><td colspan="4" class="content-placeholder">No hay insumos registrados.</td></tr>';
+      '<tr><td colspan="5" class="content-placeholder">No hay insumos registrados.</td></tr>';
     return;
   }
 
@@ -52,6 +65,7 @@ function renderInventario(productos, labels) {
           <td>${producto.nombre}</td>
           <td>${categoria}</td>
           <td>${formatoStock(producto)}</td>
+          <td class="inventario-semaforo-celda">${renderSemaforo(producto.estado)}</td>
           <td class="inventario-precio">${App.formatMoney(producto.precio)}</td>
         </tr>`;
     })
