@@ -5,9 +5,6 @@ import pe.edu.utp.appcasaforno.domain.model.Categoria;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Persistencia en memoria del catálogo de categorías.
- */
 public class CategoriasStore {
 
     private final List<Categoria> categorias = List.of(

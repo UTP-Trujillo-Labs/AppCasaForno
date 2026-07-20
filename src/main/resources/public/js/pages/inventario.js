@@ -11,7 +11,7 @@ async function cargarInventario() {
 
   try {
     const [productosRes, categoriasRes] = await Promise.all([
-      fetch("/api/pedidos/productos"),
+      fetch("/api/productos"),
       fetch("/api/categorias"),
     ]);
     if (!productosRes.ok) throw new Error("Error al obtener inventario");
@@ -25,8 +25,13 @@ async function cargarInventario() {
   } catch (err) {
     console.error(err);
     tbody.innerHTML =
-      '<tr><td colspan="3" class="content-error">No se pudo cargar el inventario.</td></tr>';
+      '<tr><td colspan="4" class="content-error">No se pudo cargar el inventario.</td></tr>';
   }
+}
+
+function formatoStock(producto) {
+  if (producto.stock == null || !producto.unidad) return "N/A";
+  return `${producto.stock} ${producto.unidad}`;
 }
 
 function renderInventario(productos, labels) {
@@ -35,7 +40,7 @@ function renderInventario(productos, labels) {
 
   if (!productos.length) {
     tbody.innerHTML =
-      '<tr><td colspan="3" class="content-placeholder">No hay insumos registrados.</td></tr>';
+      '<tr><td colspan="4" class="content-placeholder">No hay insumos registrados.</td></tr>';
     return;
   }
 
@@ -46,6 +51,7 @@ function renderInventario(productos, labels) {
         <tr>
           <td>${producto.nombre}</td>
           <td>${categoria}</td>
+          <td>${formatoStock(producto)}</td>
           <td class="inventario-precio">${App.formatMoney(producto.precio)}</td>
         </tr>`;
     })

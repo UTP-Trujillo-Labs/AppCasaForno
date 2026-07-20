@@ -39,7 +39,7 @@ async function fetchProductos(state) {
   const params = new URLSearchParams({ categoria: state.categoria });
   if (state.busqueda) params.set("busqueda", state.busqueda);
 
-  const response = await fetch(`/api/pedidos/productos?${params}`);
+  const response = await fetch(`/api/productos?${params}`);
   if (!response.ok) throw new Error("Error al obtener productos");
   state.productos = await response.json();
 }
@@ -88,7 +88,7 @@ function bindPedidosEvents(state) {
 
   document.getElementById("catalogo-grid")?.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-producto-id]");
-    if (!btn) return;
+    if (!btn || btn.disabled) return;
     agregarAlCarrito(state, btn.dataset.productoId);
   });
 
@@ -115,6 +115,17 @@ function renderCategorias(state) {
   //   .join("");
 }
 
+function stockDisponible(producto, carrito) {
+  if (producto.stock == null) return null;
+  const enCarrito = carrito.find((i) => i.id === producto.id)?.cantidad || 0;
+  return producto.stock - enCarrito;
+}
+
+function sinStock(producto, carrito) {
+  const disponible = stockDisponible(producto, carrito);
+  return disponible != null && disponible <= 0;
+}
+
 function renderProductos(state) {
   const grid = document.getElementById("catalogo-grid");
   if (!grid) return;
@@ -125,36 +136,34 @@ function renderProductos(state) {
   }
 
   grid.innerHTML = state.productos
-    .map(
-      (p) => `
+    .map((p) => {
+      const agotado = sinStock(p, state.carrito);
+      return `
       <article class="producto-card">
         <img src="${p.imagen}" alt="${p.nombre}" class="producto-img" />
         <h3 class="producto-nombre">${p.nombre}</h3>
         <p class="producto-precio">${App.formatMoney(p.precio)}</p>
-        <button type="button" class="btn-agregar" data-producto-id="${p.id}">+ Agregar</button>
-      </article>`
-    )
+        <button type="button" class="btn-agregar" data-producto-id="${p.id}"${agotado ? " disabled" : ""}>
+          ${agotado ? "Sin stock" : "+ Agregar"}
+        </button>
+      </article>`;
+    })
     .join("");
 }
 
 function agregarAlCarrito(state, productoId) {
   const producto = state.productos.find((p) => p.id === productoId);
-  if (!producto) return;
+  if (!producto || sinStock(producto, state.carrito)) return;
 
   const item = state.carrito.find((i) => i.id === productoId);
   if (item) {
     item.cantidad += 1;
   } else {
-    // const nuevoProducto = {
-    //   id: producto.id,
-    //   nombre: producto.nombre,
-    //   precio: producto.precio,
-    //   cantidad: 1,
-    // }
     state.carrito.push({ ...producto, cantidad: 1 });
   }
 
   renderCarrito(state);
+  renderProductos(state);
 }
 
 function renderCarrito(state) {
@@ -277,4 +286,5 @@ function anularPedido(state) {
   const notaEl = document.getElementById("pedido-nota");
   if (notaEl) notaEl.value = "";
   renderCarrito(state);
+  renderProductos(state);
 }

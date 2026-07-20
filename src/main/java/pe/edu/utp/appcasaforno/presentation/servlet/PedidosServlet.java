@@ -5,7 +5,6 @@ import pe.edu.utp.appcasaforno.infraestructure.web.ApiServlet;
 import pe.edu.utp.appcasaforno.presentation.handler.pedidos.CobrarMesaHandler;
 import pe.edu.utp.appcasaforno.presentation.handler.pedidos.ListarPedidosCompletadosHandler;
 import pe.edu.utp.appcasaforno.presentation.handler.pedidos.ListarPedidosPorMesaHandler;
-import pe.edu.utp.appcasaforno.presentation.handler.pedidos.ListarProductosHandler;
 
 import java.util.Map;
 
@@ -14,7 +13,6 @@ public class PedidosServlet extends ApiServlet {
     public PedidosServlet(PedidosService pedidosService) {
         super(
                 Map.of(
-                        "/productos", new ListarProductosHandler(pedidosService),
                         "/completados", new ListarPedidosCompletadosHandler(pedidosService),
                         "/mesa/{numero}", new ListarPedidosPorMesaHandler(pedidosService)),
                 Map.of(

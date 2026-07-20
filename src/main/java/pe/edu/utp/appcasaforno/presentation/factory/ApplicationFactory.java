@@ -3,11 +3,13 @@ package pe.edu.utp.appcasaforno.presentation.factory;
 import pe.edu.utp.appcasaforno.application.CategoriaServicio;
 import pe.edu.utp.appcasaforno.application.MesasServicio;
 import pe.edu.utp.appcasaforno.application.PedidosService;
+import pe.edu.utp.appcasaforno.application.ProductService;
 import pe.edu.utp.appcasaforno.domain.api.ServletRegistration;
 import pe.edu.utp.appcasaforno.presentation.servlet.CategoriasServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.CocinaServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.MesasServlet;
 import pe.edu.utp.appcasaforno.presentation.servlet.PedidosServlet;
+import pe.edu.utp.appcasaforno.presentation.servlet.ProductosServlet;
 
 import java.util.List;
 
@@ -17,7 +19,8 @@ import java.util.List;
 public class ApplicationFactory {
 
     private final MesasServicio mesasServicio = new MesasServicio();
-    private final PedidosService pedidosService = new PedidosService(mesasServicio);
+    private final ProductService productService = new ProductService();
+    private final PedidosService pedidosService = new PedidosService(mesasServicio, productService);
     private final CategoriaServicio categoriaServicio = new CategoriaServicio();
 
     public List<ServletRegistration> crearRegistrosServlets() {
@@ -26,6 +29,8 @@ public class ApplicationFactory {
                         new PedidosServlet(pedidosService)),
                 new ServletRegistration("cocinaServlet", "/api/cocina/*",
                         new CocinaServlet(pedidosService)),
+                new ServletRegistration("productosServlet", "/api/productos/*",
+                        new ProductosServlet(productService)),
                 new ServletRegistration("categoriasServlet", "/api/categorias/*",
                         new CategoriasServlet(categoriaServicio)),
                 new ServletRegistration("mesasServlet", "/api/mesas/*",

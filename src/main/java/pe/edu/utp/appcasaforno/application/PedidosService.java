@@ -3,45 +3,30 @@ package pe.edu.utp.appcasaforno.application;
 import pe.edu.utp.appcasaforno.domain.model.*;
 import pe.edu.utp.appcasaforno.infraestructure.persistence.ColaPedidos;
 import pe.edu.utp.appcasaforno.infraestructure.persistence.HistoricoPedidos;
-import pe.edu.utp.appcasaforno.infraestructure.persistence.ProductosStore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class PedidosService {
 
-    private final ProductosStore productosStore;
+    private final ProductService productService;
     private final ColaPedidos colaPedidos;
     private final HistoricoPedidos historicoPedidos;
     private final MesasServicio mesasServicio;
     private int ticketCounter = 1047;
 
-    public PedidosService(MesasServicio mesasServicio) {
-        this(mesasServicio, new ProductosStore(), new ColaPedidos(), new HistoricoPedidos());
+    public PedidosService(MesasServicio mesasServicio, ProductService productService) {
+        this(mesasServicio, productService, new ColaPedidos(), new HistoricoPedidos());
     }
 
     public PedidosService(MesasServicio mesasServicio,
-                          ProductosStore productosStore,
+                          ProductService productService,
                           ColaPedidos colaPedidos,
                           HistoricoPedidos historicoPedidos) {
         this.mesasServicio = mesasServicio;
-        this.productosStore = productosStore;
+        this.productService = productService;
         this.colaPedidos = colaPedidos;
         this.historicoPedidos = historicoPedidos;
-    }
-
-    public List<Producto> listarProductos(String categoria, String busqueda) {
-        String termino = busqueda == null ? "" : busqueda.trim().toLowerCase(Locale.ROOT);
-
-        return productosStore.listar().stream()
-                .filter(p -> categoria == null || categoria.isBlank() || p.categoria().equals(categoria))
-                .filter(p -> termino.isEmpty() || p.nombre().toLowerCase(Locale.ROOT).contains(termino))
-                .toList();
-    }
-
-    public Producto buscarProducto(String id) {
-        return productosStore.buscarPorId(id).orElse(null);
     }
 
     public TicketCocina enviarACocina(EnvioCocinaRequest request) {
@@ -54,12 +39,19 @@ public class PedidosService {
         List<String> lineas = new ArrayList<>();
         double total = 0;
         for (ItemPedido item : request.items()) {
-            Producto producto = buscarProducto(item.productoId());
+            Producto producto = productService.buscarProducto(item.productoId());
             if (producto == null) {
                 throw new IllegalArgumentException("Producto no encontrado: " + item.productoId());
             }
             if (item.cantidad() <= 0) {
                 throw new IllegalArgumentException("Cantidad inválida para: " + item.productoId());
+            }
+            if (producto.stock() != null && item.cantidad() > producto.stock()) {
+                String unidad = producto.unidad() == null ? "" : " " + producto.unidad();
+                throw new IllegalArgumentException(
+                        "Stock insuficiente para " + producto.nombre()
+                                + ". Disponible: " + producto.stock() + unidad
+                                + ", solicitado: " + item.cantidad() + unidad);
             }
             lineas.add(item.cantidad() + "x " + producto.nombre());
             total += producto.precio() * item.cantidad();

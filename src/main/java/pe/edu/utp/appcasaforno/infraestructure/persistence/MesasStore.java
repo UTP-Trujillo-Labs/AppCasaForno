@@ -10,10 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Persistencia en memoria del control de mesas.
- * Cada mesa se identifica por un ID numérico.
- */
 public class MesasStore {
 
     private static final int CANTIDAD_MESAS = 6;
