@@ -4,7 +4,7 @@ Sistema de gestión para el restaurante **Casa Forno**. Permite tomar pedidos, m
 
 ## Requisitos
 
-- Java 21 o superior
+- Java 25 o superior
 - Maven 3.8+
 
 ## Ejecución
@@ -131,7 +131,7 @@ Content-Type: application/json
 
 | Componente | Tecnología |
 |------------|------------|
-| Lenguaje | Java 21 |
+| Lenguaje | Java 25 |
 | Servidor HTTP | Apache Tomcat Embed 10.1 |
 | Serialización JSON | Jackson 2.18 |
 | Frontend | HTML, CSS y JavaScript vanilla (SPA por hash) |
