@@ -231,8 +231,9 @@ async function enviarACocina(state) {
 
     mostrarPedidoCreadoModal({ ...result, nota });
     anularPedido(state);
-    await fetchMesasDisponibles(state);
+    await Promise.all([fetchMesasDisponibles(state), fetchProductos(state)]);
     renderMesasSelect(state);
+    renderProductos(state);
   } catch (err) {
     console.error(err);
     alert("Error al enviar el pedido a cocina.");

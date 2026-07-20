@@ -2,6 +2,7 @@ package pe.edu.utp.appcasaforno.infraestructure.persistence;
 
 import pe.edu.utp.appcasaforno.domain.model.Producto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
  */
 public class ProductosStore {
 
-    private final List<Producto> productos = List.of(
+    private final List<Producto> productos = new ArrayList<>(List.of(
             new Producto("p1", "Americana", 22.0, "pizzas", "/img/catalog/Americana.jpg"),
             new Producto("p2", "Bosque encantado", 30.0, "pizzas", "/img/catalog/Bosque encantado.jpg"),
             new Producto("p3", "Bosque tropical", 31.0, "pizzas", "/img/catalog/Bosque tropical.webp"),
@@ -108,15 +109,46 @@ public class ProductosStore {
             new Producto("esp3", "Beee Feater", 26.0, "especial", "/img/catalog/beeefeater.webp", 11, "unid"),
             new Producto("esp4", "Sangría Casa Forno", 26.0, "especial", "/img/catalog/sangriacasaformo.jpg", 9, "unid"),
             new Producto("esp5", "Casillero Del Diablo", 26.0, "especial", "/img/catalog/casillerodeldiablo.webp", 8, "unid"),
-            new Producto("esp6", "Double Black Label", 26.0, "especial", "/img/catalog/doubleblacklalbel.webp", 12, "unid"));
+            new Producto("esp6", "Double Black Label", 26.0, "especial", "/img/catalog/doubleblacklalbel.webp", 12, "unid")));
 
     public List<Producto> listar() {
-        return productos;
+        return List.copyOf(productos);
     }
 
     public Optional<Producto> buscarPorId(String id) {
         return productos.stream()
                 .filter(p -> p.id().equals(id))
                 .findFirst();
+    }
+
+    /**
+     * Descuenta stock del producto. Si no controla stock ({@code null}), no hace nada.
+     */
+    public Producto descontarStock(String id, int cantidad) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("Cantidad inválida para descontar stock: " + cantidad);
+        }
+
+        for (int i = 0; i < productos.size(); i++) {
+            Producto producto = productos.get(i);
+            if (!producto.id().equals(id)) {
+                continue;
+            }
+            if (producto.stock() == null) {
+                return producto;
+            }
+            if (cantidad > producto.stock()) {
+                String unidad = producto.unidad() == null ? "" : " " + producto.unidad();
+                throw new IllegalArgumentException(
+                        "Stock insuficiente para " + producto.nombre()
+                                + ". Disponible: " + producto.stock() + unidad
+                                + ", solicitado: " + cantidad + unidad);
+            }
+            Producto actualizado = producto.conStock(producto.stock() - cantidad);
+            productos.set(i, actualizado);
+            return actualizado;
+        }
+
+        throw new IllegalArgumentException("Producto no encontrado: " + id);
     }
 }

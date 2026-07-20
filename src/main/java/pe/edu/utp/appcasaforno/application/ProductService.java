@@ -30,4 +30,8 @@ public class ProductService {
     public Producto buscarProducto(String id) {
         return productosStore.buscarPorId(id).orElse(null);
     }
+
+    public Producto descontarStock(String id, int cantidad) {
+        return productosStore.descontarStock(id, cantidad);
+    }
 }

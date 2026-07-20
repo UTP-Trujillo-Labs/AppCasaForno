@@ -20,9 +20,9 @@ public class CocinaServicio {
     }
 
     public CocinaServicio(MesasServicio mesasServicio,
-                          ProductService productService,
-                          ColaPedidos colaPedidos,
-                          HistoricoPedidos historicoPedidos) {
+            ProductService productService,
+            ColaPedidos colaPedidos,
+            HistoricoPedidos historicoPedidos) {
         this.mesasServicio = mesasServicio;
         this.productService = productService;
         this.colaPedidos = colaPedidos;
@@ -55,6 +55,8 @@ public class CocinaServicio {
             }
             lineas.add(item.cantidad() + "x " + producto.nombre());
             total += producto.precio() * item.cantidad();
+
+            productService.descontarStock(item.productoId(), item.cantidad());
         }
 
         String nota = request.nota() == null ? "" : request.nota().trim();

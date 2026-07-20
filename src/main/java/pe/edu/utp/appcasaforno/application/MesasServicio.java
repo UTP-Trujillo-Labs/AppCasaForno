@@ -10,10 +10,6 @@ import pe.edu.utp.appcasaforno.infraestructure.persistence.MesasStore;
 
 import java.util.List;
 
-/**
- * Servicio de acceso y control de mesas.
- * Las transiciones de estado se delegan al patrón State ({@link MesaContext}).
- */
 public class MesasServicio {
 
     private final MesasStore mesasStore;
@@ -25,8 +21,8 @@ public class MesasServicio {
     }
 
     public MesasServicio(MesasStore mesasStore,
-                         ColaPedidos colaPedidos,
-                         HistoricoPedidos historicoPedidos) {
+            ColaPedidos colaPedidos,
+            HistoricoPedidos historicoPedidos) {
         this.mesasStore = mesasStore;
         this.colaPedidos = colaPedidos;
         this.historicoPedidos = historicoPedidos;
