@@ -1,27 +1,55 @@
 App.registerPage("inventario", initInventario);
 
 function initInventario() {
-  bindFormMerma();
   cargarReporteCompletados();
+  cargarInventario();
 }
 
-function bindFormMerma() {
-  const form = document.getElementById("form-merma");
-  const lista = document.getElementById("lista-mermas");
-  if (!form || !lista) return;
+async function cargarInventario() {
+  const tbody = document.getElementById("inventario-insumos");
+  if (!tbody) return;
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+  try {
+    const [productosRes, categoriasRes] = await Promise.all([
+      fetch("/api/pedidos/productos"),
+      fetch("/api/categorias"),
+    ]);
+    if (!productosRes.ok) throw new Error("Error al obtener inventario");
+    if (!categoriasRes.ok) throw new Error("Error al obtener categorías");
 
-    const producto = document.getElementById("merma-producto").value.trim();
-    const cantidad = document.getElementById("merma-cantidad").value;
-    const motivo = document.getElementById("merma-motivo").value.trim();
+    const productos = await productosRes.json();
+    const categorias = await categoriasRes.json();
+    const labels = Object.fromEntries(categorias.map((c) => [c.id, c.label]));
 
-    const li = document.createElement("li");
-    li.textContent = `${producto} — ${cantidad} u. (${motivo})`;
-    lista.appendChild(li);
-    form.reset();
-  });
+    renderInventario(productos, labels);
+  } catch (err) {
+    console.error(err);
+    tbody.innerHTML =
+      '<tr><td colspan="3" class="content-error">No se pudo cargar el inventario.</td></tr>';
+  }
+}
+
+function renderInventario(productos, labels) {
+  const tbody = document.getElementById("inventario-insumos");
+  if (!tbody) return;
+
+  if (!productos.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="3" class="content-placeholder">No hay insumos registrados.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = productos
+    .map((producto) => {
+      const categoria = labels[producto.categoria] || producto.categoria || "—";
+      return `
+        <tr>
+          <td>${producto.nombre}</td>
+          <td>${categoria}</td>
+          <td class="inventario-precio">${App.formatMoney(producto.precio)}</td>
+        </tr>`;
+    })
+    .join("");
 }
 
 async function cargarReporteCompletados() {

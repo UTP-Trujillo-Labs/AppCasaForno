@@ -155,6 +155,48 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* ── Inventario y mermas ── */
+.page-inventario {
+  background: #f0f0f0;
+  margin: -2.5rem -3rem;
+  padding: 2rem 2.5rem;
+  min-height: calc(100% + 5rem);
+}
+
+.inventario-header {
+  margin-bottom: 1.5rem;
+}
+
+.inventario-header h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a1714;
+  margin-bottom: 0.35rem;
+}
+
+.inventario-header p {
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.inventario-panel {
+  background: #fdf0bc;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.inventario-panel h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1714;
+  margin-bottom: 1rem;
+}
+
 .reporte-panel .reporte-header {
   display: flex;
   flex-wrap: wrap;
@@ -174,19 +216,62 @@ body {
   color: #555;
 }
 
-.reporte-table-wrap {
+.inventario-table-wrap {
   overflow-x: auto;
+}
+
+.inventario-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: #1a1714;
+}
+
+.inventario-table thead {
+  border-bottom: 1px solid #c8b88a;
+}
+
+.inventario-table th,
+.inventario-table td {
+  padding: 0.75rem 0.5rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.inventario-table th {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1a1714;
+  position: relative;
+  padding-right: 1.25rem;
+}
+
+.inventario-table th:not(:last-child)::after {
+  content: "|";
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #1a1714;
+  font-weight: 400;
+  opacity: 0.55;
+}
+
+.inventario-table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid rgba(200, 184, 138, 0.35);
+}
+
+.inventario-precio,
+.reporte-monto {
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .reporte-items {
   max-width: 280px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: #444;
-}
-
-.reporte-monto {
-  font-weight: 700;
-  white-space: nowrap;
 }
 
 /* ── Forms ── */
@@ -291,10 +376,6 @@ button:hover {
   background: transparent !important;
   border: none !important;
   padding-left: 0 !important;
-}
-
-.mermas-list {
-  margin-top: 1rem;
 }
 
 /* ── Monitor de cocina ── */
@@ -1192,9 +1273,22 @@ body.contacto-page {
     grid-template-columns: 1fr;
   }
 
-  .page-cocina {
+  .page-cocina,
+  .page-inventario {
     margin: -1.5rem -1.5rem;
     padding: 1.25rem;
+  }
+
+  .inventario-panel {
+    padding: 1.15rem 1.25rem;
+  }
+
+  .inventario-table {
+    font-size: 0.95rem;
+  }
+
+  .inventario-table th {
+    font-size: 0.95rem;
   }
 
   .ticket-grid {
