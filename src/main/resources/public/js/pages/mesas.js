@@ -149,7 +149,7 @@ function bindPagoModal() {
 
     btn.disabled = true;
     try {
-      const response = await fetch(`/api/pedidos/mesa/${idMesa}/pagar`, { method: "POST" });
+      const response = await fetch(`/api/mesas/${idMesa}/pagar`, { method: "POST" });
       const result = await response.json();
       if (!response.ok) {
         alert(result.error || "No se pudo procesar el pago.");

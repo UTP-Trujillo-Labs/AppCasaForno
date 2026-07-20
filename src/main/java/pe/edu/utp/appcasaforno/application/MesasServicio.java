@@ -2,8 +2,13 @@ package pe.edu.utp.appcasaforno.application;
 
 import pe.edu.utp.appcasaforno.domain.model.Mesa;
 import pe.edu.utp.appcasaforno.domain.model.MesasResumen;
+import pe.edu.utp.appcasaforno.domain.model.TicketCocina;
 import pe.edu.utp.appcasaforno.domain.state.mesa.MesaContext;
+import pe.edu.utp.appcasaforno.infraestructure.persistence.ColaPedidos;
+import pe.edu.utp.appcasaforno.infraestructure.persistence.HistoricoPedidos;
 import pe.edu.utp.appcasaforno.infraestructure.persistence.MesasStore;
+
+import java.util.List;
 
 /**
  * Servicio de acceso y control de mesas.
@@ -12,13 +17,19 @@ import pe.edu.utp.appcasaforno.infraestructure.persistence.MesasStore;
 public class MesasServicio {
 
     private final MesasStore mesasStore;
+    private final ColaPedidos colaPedidos;
+    private final HistoricoPedidos historicoPedidos;
 
     public MesasServicio() {
-        this(new MesasStore());
+        this(new MesasStore(), new ColaPedidos(), new HistoricoPedidos());
     }
 
-    public MesasServicio(MesasStore mesasStore) {
+    public MesasServicio(MesasStore mesasStore,
+                         ColaPedidos colaPedidos,
+                         HistoricoPedidos historicoPedidos) {
         this.mesasStore = mesasStore;
+        this.colaPedidos = colaPedidos;
+        this.historicoPedidos = historicoPedidos;
     }
 
     public MesasResumen listar() {
@@ -49,5 +60,27 @@ public class MesasServicio {
         MesaContext context = new MesaContext(mesa);
         context.ocupar();
         return mesasStore.actualizarEstado(idMesa, context.getEstado());
+    }
+
+    /**
+     * Cobra la mesa solo si todos sus pedidos están COMPLETADOS,
+     * los marca como PAGADO (quedan en histórico) y libera la mesa.
+     */
+    public Mesa cobrarMesa(int idMesa) {
+        obtenerPorId(idMesa);
+        List<TicketCocina> pendientes = colaPedidos.listarPorMesa(idMesa);
+        if (!pendientes.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La mesa " + idMesa + " aún tiene pedidos pendientes en cocina.");
+        }
+
+        List<TicketCocina> completados = historicoPedidos.listarCompletadosPorMesa(idMesa);
+        if (completados.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La mesa " + idMesa + " no tiene pedidos completados para cobrar.");
+        }
+
+        historicoPedidos.marcarPagadosPorMesa(idMesa);
+        return avanzarEstado(idMesa);
     }
 }
